@@ -1,144 +1,155 @@
+import os
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot import types
+from flask import Flask, request
 
-# আপনার দেওয়া বটের টোকেন এখানে সেট করা হলো
-TOKEN = "8750150015:AAGGkj93aC-HvXCxWM9WzIaPTRFeexkmQ8c"
+# বটের টোকেন এবং এডমিন আইডি
+TOKEN = "8750150015:AAGGkj93aC-HvXCXwM9WzIaP"
+ADMIN_ID = 123456789  # আপনার আসল টেলিগ্রাম আইডি এখানে দিন
+
 bot = telebot.TeleBot(TOKEN)
+app = Flask(__name__)
 
-# ডেমো ইউজার ডেটা
-user_data = {
-    "balance": 0,
-    "total_earned": 0,
-    "total_withdrawn": 0
-}
+user_balances = {}
 
-# ১. /start কমান্ড এবং হোম পেজ
+# ইনবক্সের নিচে সব সময় দৃশ্যমান মূল মেনু কিবোর্ড
+def get_main_keyboard():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    btn1 = types.KeyboardButton("📁 Available Tasks")
+    btn2 = types.KeyboardButton("📦 My Tasks")
+    btn3 = types.KeyboardButton("💰 My Earnings")
+    btn4 = types.KeyboardButton("💸 Withdraw")
+    btn5 = types.KeyboardButton("💬 Support")
+    markup.add(btn1, btn2, btn3, btn4, btn5)
+    return markup
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    markup = InlineKeyboardMarkup()
-    markup.row_width = 1
-    markup.add(
-        InlineKeyboardButton("📂 Available Tasks", callback_data="available_tasks"),
-        InlineKeyboardButton("📦 My Tasks", callback_data="my_tasks"),
-        InlineKeyboardButton("💰 My Earnings", callback_data="my_earnings"),
-        InlineKeyboardButton("💸 Withdraw", callback_data="withdraw"),
-        InlineKeyboardButton("💬 Support", callback_data="support")
-    )
-    
+    user_id = message.from_user.id
+    if user_id not in user_balances:
+        user_balances[user_id] = 0
+
     welcome_text = (
-        "Welcome to Gmail Cash BD Bot!\n"
-        "🏠 Main Menu\n\n"
-        f"Balance: ৳{user_data['balance']}\n"
+        "🏠 *Main Menu*\n\n"
+        "Welcome to Gmail Cash BD Bot!\n\n"
+        f"💰 Balance: ৳{user_balances[user_id]}\n"
         "✅ Available Tasks: 5\n"
         "✅ Completed: 0"
     )
-    bot.send_message(message.chat.id, welcome_text, reply_markup=markup)
+    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=get_main_keyboard())
 
-# ২. সকল বাটন ক্লিক হ্যান্ডলার
+@bot.message_handler(func=lambda message: True)
+def handle_menu(message):
+    text = message.text
+    chat_id = message.chat.id
+
+    if text == "📁 Available Tasks":
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("📌 Task ID: #501 (Click to Submit)", callback_data="start_task_501"))
+        markup.add(types.InlineKeyboardButton("🔙 Main Menu", callback_data="back_to_home"))
+        bot.send_message(chat_id, "📁 *Available Tasks*\n\nClick on the task below to submit your proof:", parse_mode="Markdown", reply_markup=markup)
+
+    elif text == "📦 My Tasks":
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("🔙 Main Menu", callback_data="back_to_home"))
+        bot.send_message(chat_id, "📦 *My Tasks*\n\nYou have no active or pending tasks right now.", parse_mode="Markdown", reply_markup=markup)
+
+    elif text == "💰 My Earnings":
+        user_id = message.from_user.id
+        bal = user_balances.get(user_id, 0)
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("🔙 Main Menu", callback_data="back_to_home"))
+        bot.send_message(chat_id, f"💰 *My Earnings*\n\nTotal Balance: ৳{bal}", parse_mode="Markdown", reply_markup=markup)
+
+    elif text == "💸 Withdraw":
+        user_id = message.from_user.id
+        bal = user_balances.get(user_id, 0)
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("💳 Withdraw via Nagad/Bkash", callback_data="withdraw_req"))
+        markup.add(types.InlineKeyboardButton("🔙 Main Menu", callback_data="back_to_home"))
+        bot.send_message(chat_id, f"💸 *WITHDRAW*\n\nAvailable Balance: ৳{bal}\nMethod: Nagad/Bkash", parse_mode="Markdown", reply_markup=markup)
+
+    elif text == "💬 Support":
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton("🔙 Main Menu", callback_data="back_to_home"))
+        bot.send_message(chat_id, "💬 *Support*\n\nFor any help, contact administration.", parse_mode="Markdown", reply_markup=markup)
+    
+    else:
+        bot.send_message(chat_id, "দয়া করে নিচের মেনু বাটনগুলো ব্যবহার করুন।", reply_markup=get_main_keyboard())
+
 @bot.callback_query_handler(func=lambda call: True)
-def callback_query(call):
-    if call.data == "available_tasks":
-        markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("👁️ View Task", callback_data="view_task_gmail"))
-        
-        text = (
-            "📄 AVAILABLE TASKS\n\n"
-            "#501\n"
-            "📧 Gmail Account Sell\n"
-            "Reward: ৳30\n"
-            "Deadline: 12 Hours"
+def callback_handler(call):
+    chat_id = call.message.chat.id
+    user_id = call.from_user.id
+
+    if call.data == "back_to_home":
+        bot.delete_message(chat_id, call.message.message_id)
+        user_balances.setdefault(user_id, 0)
+        welcome_text = (
+            "🏠 *Main Menu*\n\n"
+            "Welcome back to Gmail Cash BD Bot!\n\n"
+            f"💰 Balance: ৳{user_balances[user_id]}\n"
+            "✅ Available Tasks: 5\n"
+            "✅ Completed: 0"
         )
-        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup)
+        bot.send_message(chat_id, welcome_text, parse_mode="Markdown", reply_markup=get_main_keyboard())
 
-    elif call.data == "view_task_gmail":
-        markup = InlineKeyboardMarkup()
-        markup.row(
-            InlineKeyboardButton("✅ Accept Task", callback_data="accept_task"),
-            InlineKeyboardButton("⬅️ Back", callback_data="available_tasks")
-        )
-        text = (
-            "📝 TASK #501\n"
-            "📧 Gmail Account Sell\n\n"
-            "📌 কাজের নির্দেশিকা:\n"
-            "১. নতুন জিমেইল খুলুন বা রিকভারি দিন।\n"
-            "২. ইউজার আইডি ও পাসওয়ার্ড সাবমিট করুন।"
-        )
-        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data == "start_task_501":
+        bot.answer_callback_query(call.id)
+        msg = bot.send_message(chat_id, "📤 আপনার জিমেইল বা কাজের প্রুফ (স্ক্রিনশট/টেক্সট) এখানে চ্যাটে পাঠান:")
+        bot.register_next_step_handler(msg, process_task_submission)
 
-    elif call.data == "accept_task":
-        markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("📤 Submit Work", callback_data="submit_work"))
-        text = (
-            "✅ TASK ACCEPTED\n\n"
-            "Task ID: #501\n"
-            "Status: 🟡 In Progress"
-        )
-        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith("approve_"):
+        target_user = int(call.data.split("_")[1])
+        if user_id == ADMIN_ID:
+            user_balances[target_user] = user_balances.get(target_user, 0) + 30
+            bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=call.message.text + "\n\n✅ *Approved by Admin!* (৳30 added)")
+            bot.send_message(target_user, "✅ Task Approved! এডমিন আপনার কাজটি এপ্রুভ করেছেন এবং ব্যালেন্সে ৳30 যোগ হয়েছে।")
+        else:
+            bot.answer_callback_query(call.id, "You are not authorized!", show_alert=True)
 
-    elif call.data == "submit_work":
-        bot.send_message(call.message.chat.id, "✅ আপনার জিমেইল তথ্য সফলভাবে সাবমিট হয়েছে! অ্যাডমিন রিভিউ করছেন।")
-        
-        # অ্যাডমিনের জন্য রিভিউ প্যানেল ফ্লো (ডেমো আকারে অটো এপ্রুভ অপشن সহ)
-        admin_markup = InlineKeyboardMarkup()
-        admin_markup.row(
-            InlineKeyboardButton("✅ APPROVE", callback_data="admin_approve"),
-            InlineKeyboardButton("❌ REJECT", callback_data="admin_reject")
-        )
-        admin_text = (
-            "🔔 TASK REVIEW\n\n"
-            "Task: #501 (Gmail Sell)\n"
-            "Worker: @User\n"
-            "Submission: Gmail & Password\n"
-            "Status: 🟡 Pending"
-        )
-        bot.send_message(call.message.chat.id, admin_text, reply_markup=admin_markup)
+    elif call.data.startswith("reject_"):
+        target_user = int(call.data.split("_")[1])
+        if user_id == ADMIN_ID:
+            bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=call.message.text + "\n\n❌ *Rejected by Admin!*")
+            bot.send_message(target_user, "❌ Task Rejected. আপনার কাজের প্রুফ সঠিক নয়।")
+        else:
+            bot.answer_callback_query(call.id, "You are not authorized!", show_alert=True)
 
-    elif call.data == "my_earnings":
-        markup = InlineKeyboardMarkup()
-        markup.row(
-            InlineKeyboardButton("💸 Withdraw", callback_data="withdraw"),
-            InlineKeyboardButton("📜 History", callback_data="history")
-        )
-        text = (
-            "💰 MY EARNINGS\n\n"
-            f"Available Balance: ৳{user_data['balance']}\n"
-            f"Total Earned: ৳{user_data['total_earned']}\n"
-            f"Total Withdrawn: ৳{user_data['total_withdrawn']}"
-        )
-        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data == "withdraw_req":
+        bot.answer_callback_query(call.id)
+        bot.send_message(chat_id, "✅ Withdrawal Request Sent! Status: 🟡 Pending (এডমিন চেক করে পেমেন্ট পাঠিয়ে দেবেন)")
 
-    elif call.data == "withdraw":
-        markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("✅ Submit Withdrawal", callback_data="confirm_withdraw"))
-        text = (
-            "💸 WITHDRAW\n\n"
-            f"Available: ৳{user_data['balance']}\n\n"
-            "Method: Nagad\n"
-            "Account: **********"
-        )
-        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup)
+def process_task_submission(message):
+    user_id = message.from_user.id
+    username = message.from_user.username or "No Username"
+    proof_text = message.text
 
-    elif call.data == "confirm_withdraw":
-        bot.send_message(call.message.chat.id, "✅ Withdrawal Request Sent! Status: 🟡 Pending (অ্যাডমিন চেক করে পেমেন্ট পাঠিয়ে দেবেন)")
+    bot.send_message(message.chat.id, "✅ আপনার কাজের প্রুফ সফলভাবে জমা হয়েছে! এডমিন রিভিউ করছেন।", reply_markup=get_main_keyboard())
 
-    elif call.data == "admin_approve":
-        user_data['balance'] += 30
-        user_data['total_earned'] += 30
-        bot.edit_message_text("✅ Task Approved! ইউজারের ব্যালেন্সে ৳30 যোগ করা হয়েছে।", call.message.chat.id, call.message.message_id)
+    admin_markup = types.InlineKeyboardMarkup()
+    admin_markup.add(
+        types.InlineKeyboardButton("✅ Approve (৳30)", callback_data=f"approve_{user_id}"),
+        types.InlineKeyboardButton("❌ Reject", callback_data=f"reject_{user_id}")
+    )
+    
+    admin_msg = (
+        f"🔔 *New Task Proof Submitted!*\n\n"
+        f"👤 User: @{username} (ID: `{user_id}`)\n"
+        f"📄 Proof:\n{proof_text}"
+    )
+    bot.send_message(ADMIN_ID, admin_msg, parse_mode="Markdown", reply_markup=admin_markup)
 
-    elif call.data == "admin_reject":
-        bot.edit_message_text("❌ Task Rejected. Reason: জিমেইল তথ্য সঠিক নয়।", call.message.chat.id, call.message.message_id)
+@app.route('/')
+def home():
+    return "Bot is running!"
 
-    elif call.data == "my_tasks":
-        bot.answer_callback_query(call.id, "আপনার কোনো রানিং টাস্ক নেই।")
-
-    elif call.data == "support":
-        bot.answer_callback_query(call.id, "সাপোর্টের জন্য যোগাযোগ করুন: @Admin")
-
-    elif call.data == "history":
-        bot.answer_callback_query(call.id, "কোনো হিস্টরি পাওয়া যায়নি।")
-
-# বট রান করার কমান্ড
 if __name__ == '__main__':
-    print("Gmail Cash BD Bot is running smoothly...")
-    bot.polling(none_stop=True)
+    import threading
+    # ব্যাকগ্রাউন্ডে টেলিগ্রাম পোলিং রান করা
+    threading.Thread(target=bot.infinity_polling, daemon=True).start()
+    # রেন্ডার পোর্টের জন্য ফ্লাস্ক সার্ভার চালু করা
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+    
+

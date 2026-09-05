@@ -334,4 +334,8 @@ if __name__ == '__main__':
     f"🔹 Password: {password}\n\n"
     f"✅ Status: Approved +৳13 Added & Completed\n\n"
     f"🎉 অভিনন্দন! আপনার জিমেইল টাস্কটি এডমিন কর্তৃক **এপ্রুভ** হয়েছে এবং ইনকাম ব্যালেন্সে ১৩ টাকা যোগ হয়েছে।"
-    )
+    ) keyboard = [
+    [KeyboardButton("🚀 Available Tasks"), KeyboardButton("💎 My Balance")],
+    [KeyboardButton("💸 Withdraw"), KeyboardButton("🌐 Language")],
+    [KeyboardButton("🛡️ Admin Support")]
+    ]

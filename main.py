@@ -324,7 +324,7 @@ def callback_query(call):
 
 if __name__ == '__main__':
     print("Bot is running...")
-    bot.infinity_polling() message = (bot.infinity_polling()
+    bot.infinity_polling()
     f"Instant Task Pay:\n"
     f"📥 【নতুন টাস্ক সাবমিশন】\n\n"
     f"👤 User ID: {user_id}\n"

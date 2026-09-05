@@ -324,4 +324,14 @@ def callback_query(call):
 
 if __name__ == '__main__':
     print("Bot is running...")
-    bot.infinity_polling()
+    bot.infinity_polling() message = (
+    f"Instant Task Pay:\n"
+    f"📥 【নতুন টাস্ক সাবমিশন】\n\n"
+    f"👤 User ID: {user_id}\n"
+    f"🔹 First Name: {first_name}\n"
+    f"🔹 Last Name: {last_name}\n"
+    f"🔹 Gmail: {gmail}\n"
+    f"🔹 Password: {password}\n\n"
+    f"✅ Status: Approved +৳13 Added & Completed\n\n"
+    f"🎉 অভিনন্দন! আপনার জিমেইল টাস্কটি এডমিন কর্তৃক **এপ্রুভ** হয়েছে এবং ইনকাম ব্যালেন্সে ১৩ টাকা যোগ হয়েছে।"
+    )

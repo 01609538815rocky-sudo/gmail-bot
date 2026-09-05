@@ -588,7 +588,7 @@ async def reject_withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # RUN
 # =========================
 def main():
-    setup()import os
+    
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 

@@ -1,4 +1,4 @@
-import telebot
+bot.py telebot
 
 # আপনার দেওয়া টেলিগ্রাম বট টোকেন
 TOKEN = "8750150015:AAGGkj93aC-HvXCxWM9WzIaPTRFeexkmQ8c"

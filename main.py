@@ -588,7 +588,25 @@ async def reject_withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # RUN
 # =========================
 def main():
-    setup()
+    setup()import os
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+
+TOKEN = "8750150015:AAGGkj93aC-HvXCxWM9WzIaPTRFeexkmQ8c"
+ADMIN_ID = 8049855208
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("🤖 বট সফলভাবে চালু হয়েছে!")
+
+def main():
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    print("🤖 Bot running...")
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
+    
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandle

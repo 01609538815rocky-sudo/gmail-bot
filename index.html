@@ -1,1 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Sell - Task Trading App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1b12;
+            --card-bg: #142d1f;
+            --accent-green: #2ecc71;
+            --dark-green: #27ae60;
+            --text-color: #ffffff;
+            --text-secondary: #a3e4d7;
+            --border-color: #1e4630;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .header h1 {
+            color: var(--accent-green);
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #142d1f, #1b4d32);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-green);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+        }
+        .balance-card h3 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .balance-card .amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--accent-green);
+        }
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .task-item {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+        .task-info h4 {
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+        .task-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .btn {
+            background-color: var(--accent-green);
+            color: #0d1b12;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: var(--dark-green);
+            color: #ffffff;
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gmail Sell & Tasks</h1>
+            <p>Secure Trading & Micro Tasks Platform</p>
+        </div>
 
+        <div class="balance-card">
+            <h3>Total Balance</h3>
+            <div class="amount" id="balance">$0.00</div>
+        </div>
+
+        <div class="section-title">Available Tasks</div>
+        <div class="task-list">
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Submit Verified Gmail</h4>
+                    <p>Reward: $0.50</p>
+                </div>
+                <button class="btn" onclick="completeTask(0.50)">Start</button>
+            </div>
+            <div class="task-item">
+                <div class="task-info">
+                    <h4>Join Telegram Channel</h4>
+                    <p>Reward: $0.20</p>
+                </div>
+                <button class="btn" onclick="completeTask(0.20)">Start</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let currentBalance = 0.00;
+
+        function completeTask(reward) {
+            currentBalance += reward;
+            document.getElementById('balance').innerText = '$' + currentBalance.toFixed(2);
+            tg.showAlert(`Task completed! Earned $${reward.toFixed(2)}`);
+        }
+    </script>
+</body>
+</html>

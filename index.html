@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Account Solutions - User App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1b12;
+            --card-bg: #142d1f;
+            --accent-green: #2ecc71;
+            --dark-green: #27ae60;
+            --text-color: #ffffff;
+            --text-secondary: #a3e4d7;
+            --border-color: #1e4630;
+            --btn-yellow: #f1c40f;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .header h1 {
+            color: var(--accent-green);
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        .section-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .section-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background: #0d1b12;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn {
+            width: 100%;
+            background-color: var(--accent-green);
+            color: #0d1b12;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: var(--dark-green);
+            color: #ffffff;
+        }
+        .btn-yellow {
+            background-color: var(--btn-yellow);
+            color: #000;
+        }
+        .task-card {
+            background: #0d1b12;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-info h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        .task-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
+        }
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-item.active {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .wallet-balance {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BD অ্যাকাউন্ট সলিউশনস</h1>
+            <p>সহজ, নিরাপদ ও দ্রুত ইনকামের মাধ্যম</p>
+        </div>
+
+        <!-- Tab 1: Sign Up / Profile -->
+        <div id="tab-signup" class="tab-content active">
+            <div class="section-box">
+                <h3>১. রেজিস্ট্রেশন ও প্রোফাইল</h3>
+                <div class="form-group">
+                    <label>নাম</label>
+                    <input type="text" class="form-control" id="regName" placeholder="আপনার নাম লিখুন">
+                </div>
+                <div class="form-group">
+                    <label>ফোন নম্বর</label>
+                    <input type="text" class="form-control" id="regPhone" placeholder="017xxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label>ইমেল</label>
+                    <input type="email" class="form-control" id="regEmail" placeholder="example@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" class="form-control" id="regPass" placeholder="******">
+                </div>
+                <button class="btn" onclick="saveProfile()">সাবমিট</button>
+            </div>
+        </div>
+
+        <!-- Tab 2: Verification -->
+        <div id="tab-verify" class="tab-content">
+            <div class="section-box">
+                <h3>২. অ্যাকাউন্ট ভেরিফিকেশন</h3>
+                <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 15px;">
+                    আপনার অ্যাকাউন্টটি সচল করতে ৩০ টাকা দিয়ে ভেরিফাই করুন।<br>
+                    <strong>বিকাশ / নগদ / রকেট: 017xxxxxxxx</strong>
+                </p>
+                <div class="form-group">
+                    <label>ট্রানজেকশন আইডি (TrxID)</label>
+                    <input type="text" class="form-control" id="trxId" placeholder="যেমন: 9L87... ">
+                </div>
+                <button class="btn btn-yellow" onclick="submitVerify()">ভেরিফিকেশন সাবমিট</button>
+                <div id="verifyStatus" style="text-align: center; margin-top: 10px; font-size: 13px; color: var(--accent-green);"></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Tasks -->
+        <div id="tab-tasks" class="tab-content">
+            <div class="section-box">
+                <h3>৩. কাজ শুরু করুন</h3>
+                <div class="task-card">
+                    <div class="task-info">
+                        <h4>জিমেইল সেল</h4>
+                        <p>Rate: 10 Taka</p>
+                    </div>
+                    <button class="btn" style="width: auto; padding: 6px 12px; margin:0;" onclick="switchTab('gmail')">কাজ করুন</button>
+                </div>
+                <div class="task-card">
+                    <div class="task-info">
+                        <h4>ফেসবুক সেল</h4>
+                        <p>Rate: 2 Taka</p>
+                    </div>
+                    <button class="btn btn-yellow" style="width: auto; padding: 6px 12px; margin:0;" onclick="alert('শীঘ্রই আসছে!')">কাজ করুন</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Gmail Sell Form -->
+        <div id="tab-gmail" class="tab-content">
+            <div class="section-box">
+                <h3>৪. জিমেইল সেল ফর্ম</h3>
+                <div class="form-group">
+                    <label>জিমেইল নাম</label>
+                    <input type="text" class="form-control" id="sellGmail" placeholder="example@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="text" class="form-control" id="sellPass" placeholder="জিমেইলের পাসওয়ার্ড">
+                </div>
+                <div class="form-group">
+                    <label>টেলিগ্রাম ইউজার আইডি</label>
+                    <input type="text" class="form-control" id="sellTg" placeholder="@username">
+                </div>
+                <div class="form-group">
+                    <label>আপনার নাম</label>
+                    <input type="text" class="form-control" id="sellName" placeholder="আপনার নাম">
+                </div>
+                <button class="btn" onclick="submitGmailTask()">সাবমিট</button>
+            </div>
+        </div>
+
+        <!-- Tab 5: Wallet -->
+        <div id="tab-wallet" class="tab-content">
+            <div class="section-box">
+                <h3>ওয়ালেট ও পেমেন্ট</h3>
+                <p style="text-align: center; color: var(--text-secondary);">মোট আয়</p>
+                <div class="wallet-balance" id="walletBalance">10 টাকা</div>
+                <button class="btn btn-yellow" onclick="withdrawMoney()">উত্তোলন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('signup')">
+            <span>👤</span> প্রোফাইল
+        </button>
+        <button class="nav-item" onclick="switchTab('verify')">
+            <span>💳</span> ভেরিফাই
+        </button>
+        <button class="nav-item" onclick="switchTab('tasks')">
+            <span>📋</span> কাজ
+        </button>
+        <button class="nav-item" onclick="switchTab('wallet')">
+            <span>💰</span> ওয়ালেট
+        </button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let userBalance = 10;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            if(tabName === 'gmail') {
+                document.getElementById('tab-gmail').classList.add('active');
+            } else {
+                document.getElementById('tab-' + tabName).classList.add('active');
+                event.currentTarget.classList.add('active');
+            }
+        }
+
+        function saveProfile() {
+            let name = document.getElementById('regName').value;
+            if(!name) {
+                tg.showAlert('দয়া করে আপনার নাম লিখুন!');
+                return;
+            }
+            tg.showAlert('রেজিস্ট্রেশন সফল হয়েছে!');
+            switchTab('verify');
+        }
+
+        function submitVerify() {
+            let trx = document.getElementById('trxId').value;
+            if(!trx) {
+                tg.showAlert('দয়া করে ট্রানজেকশন আইডি দিন!');
+                return;
+            }
+            document.getElementById('verifyStatus').innerText = 'স্ট্যাটাস: ভেরিফাইড ✓';
+            tg.showAlert('অ্যাকাউন্ট সফলভাবে ভেরিফাই হয়েছে!');
+            switchTab('tasks');
+        }
+
+        function submitGmailTask() {
+            let email = document.getElementById('sellGmail').value;
+            if(!email) {
+                tg.showAlert('দয়া করে জিমেইল দিন!');
+                return;
+            }
+            userBalance += 10;
+            document.getElementById('walletBalance').innerText = userBalance + ' টাকা';
+            tg.showAlert('জিমেইল সাবমিট সফল হয়েছে! ১০ টাকা যোগ হয়েছে।');
+            switchTab('wallet');
+        }
+
+        function withdrawMoney() {
+            if(userBalance <= 0) {
+                tg.showAlert('পর্যাপ্ত ব্যালেন্স নেই!');
+                return;
+            }
+            tg.showAlert('উত্তোলনের অনুরোধ সফলভাবে পাঠানো হয়েছে!');
+        }
+    </script>
+</body>
+  </html>

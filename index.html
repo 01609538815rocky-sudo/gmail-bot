@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelancing Academy</title>
+    <style>
+        :root {
+            --primary-orange: #ff7f00;
+            --dark-orange: #e67300;
+            --bg-color: #fff9f0;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app-container { width: 100%; max-width: 480px; height: 100vh; max-height: 850px; background: var(--white); box-shadow: 0 0 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; position: relative; overflow: hidden; border-radius: 10px; }
+        
+        /* Header */
+        header { background: var(--primary-orange); color: var(--white); padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 18px; }
+        .menu-btn, .profile-icon { background: none; border: none; color: var(--white); font-size: 20px; cursor: pointer; }
+
+        /* Content Area */
+        .content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 70px; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: var(--primary-orange); display: flex; justify-content: space-around; padding: 10px 0; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .nav-item { background: none; border: none; color: var(--white); display: flex; flex-direction: column; align-items: center; font-size: 12px; cursor: pointer; }
+        .nav-item span { font-size: 18px; }
+
+        /* UI Elements */
+        .card { background: var(--white); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .btn { background: var(--primary-orange); color: var(--white); border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; font-size: 16px; margin-top: 10px; }
+        .btn:hover { background: var(--dark-orange); }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        
+        /* Modal / Notification */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; display: none; }
+        .modal-content { background: var(--white); padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+        
+        /* Grid Menu */
+        .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .task-card { background: #fff5eb; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid #ffd1a4; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- Auth Screen (Login / Register) -->
+    <div id="authScreen" class="screen active" style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+        <h2 style="text-align: center; color: var(--primary-orange); margin-bottom: 20px;">BD Freelancing Academy</h2>
+        <div id="registerForm">
+            <h3>রেজিস্ট্রেশন করুন</h3>
+            <input type="text" id="regName" placeholder="আপনার নাম">
+            <input type="email" id="regEmail" placeholder="জিমেইল এড্রেস">
+            <input type="text" id="regPhone" placeholder="মোবাইল নাম্বার">
+            <input type="password" id="regPass" placeholder="পাসওয়ার্ড">
+            <button class="btn" onclick="handleRegister()">রেজিস্ট্রেশন সম্পন্ন করুন</button>
+            <p style="text-align: center; margin-top: 15px; cursor: pointer; color: blue;" onclick="toggleAuth()">লগইন করতে এখানে চাপুন</p>
+        </div>
+        <div id="loginForm" style="display:none;">
+            <h3>লগইন করুন</h3>
+            <input type="email" id="loginEmail" placeholder="জিমেইল এড্রেস">
+            <input type="password" id="loginPass" placeholder="পাসওয়ার্ড">
+            <button class="btn" onclick="handleLogin()">লগইন</button>
+            <p style="text-align: center; margin-top: 15px; cursor: pointer; color: blue;" onclick="toggleAuth()">নতুন অ্যাকাউন্ট খুলুন</p>
+        </div>
+    </div>
+
+    <!-- Main App Wrapper -->
+    <div id="mainApp" style="display: none; height: 100%; display: flex; flex-direction: column;">
+        <header>
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <span>BD FREELANCING ACADEMY</span>
+            <button class="profile-icon" onclick="switchTab('profile')">👤</button>
+        </header>
+
+        <div class="content">
+            <!-- Home Tab -->
+            <div id="homeTab" class="screen active">
+                <div class="card" style="background: linear-gradient(135deg, #222, #444); color: white; text-align: center;">
+                    <h3>🌟 VIP কাজ ও অফার</h3>
+                    <p>প্রতিদিন কাজ করুন, প্রতিদিন পেমেন্ট নিন!</p>
+                </div>
+                <h4>কাজের ক্যাটাগরি</h4>
+                <div class="task-grid">
+                    <div class="task-card" onclick="openTask('gmail')">📧 Gmail কাজ</div>
+                    <div class="task-card" onclick="openTask('facebook')">📘 Facebook কাজ</div>
+                    <div class="task-card" onclick="openTask('instagram')">📸 Instagram</div>
+                </div>
+            </div>
+
+            <!-- Task Submit Tab -->
+            <div id="taskTab" class="screen">
+                <h3 id="taskTitle">টাস্ক সাবমিট ফরম</h3>
+                <div class="card">
+                    <p>আজকের পাসওয়ার্ড: <b id="dailyPass" style="color:var(--primary-orange);">@rakib002</b></p>
+                </div>
+                <div id="gmailFormFields">
+                    <input type="email" id="subGmail" placeholder="জিমেইল লিখুন">
+                    <input type="password" id="subGmailPass" placeholder="জিমেইল পাসওয়ার্ড (এডমিন পাসওয়ার্ড)">
+                </div>
+                <div id="fbFormFields" style="display:none;">
+                    <input type="text" id="fbUserId" placeholder="Facebook User ID">
+                    <input type="text" id="fbCookies" placeholder="Paste cookies here">
+                </div>
+                <button class="btn" onclick="submitTask()">সাবমিট করুন</button>
+            </div>
+
+            <!-- Wallet Tab -->
+            <div id="walletTab" class="screen">
+                <h3>ওয়ালেট ব্যালেন্স</h3>
+                <div class="card" style="background: #111; color: white; text-align: center;">
+                    <p>Main Balance</p>
+                    <h2>৳ <span id="mainBalance">0.00</span></h2>
+                </div>
+                <div class="card">
+                    <h4>জিমেইল ওয়ালেট: ৳ <span id="gmailBal">2.50</span></h4>
+                    <h4>পোস্ট ইনকাম ওয়ালেট: ৳ 50.00</h4>
+                </div>
+            </div>
+
+            <!-- Withdraw Tab -->
+            <div id="withdrawTab" class="screen">
+                <h3>উইথড্র রিকোয়েস্ট</h3>
+                <div class="card">
+                    <select id="withdrawMethod">
+                        <option value="bKash">বিকাশ</option>
+                        <option value="Nagad">নগদ</option>
+                    </select>
+                    <input type="text" id="withdrawNum" placeholder="আপনার নাম্বার দিন">
+                    <input type="number" id="withdrawAmount" placeholder="টাকার পরিমাণ লিখুন">
+                    <button class="btn" onclick="requestWithdraw()">উইথড্র সাবমিট</button>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profileTab" class="screen">
+                <h3>প্রোফাইল তথ্য</h3>
+                <div class="card" style="text-align: center;">
+                    <h2 id="proName">User Name</h2>
+                    <p id="proEmail">email@gmail.com</p>
+                    <p>রেফার কোড: <b style="color:var(--primary-orange);">621672</b></p>
+                </div>
+                <button class="btn" style="background:red;" onclick="logout()">লগ আউট</button>
+            </div>
+            
+            <!-- Admin Panel Tab -->
+            <div id="adminTab" class="screen">
+                <h3>অ্যাডমিন প্যানেল (ম্যানেজমেন্ট)</h3>
+                <div class="card">
+                    <p>পেন্ডিং কাজ ও উইথড্র রিকোয়েস্ট:</p>
+                    <div id="adminList" style="margin-top: 10px;">
+                        <p>কোনো পেন্ডিং রিকোয়েস্ট নেই।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item" onclick="switchTab('home')"><span>🏠</span>হোম</button>
+            <button class="nav-item" onclick="switchTab('wallet')"><span>💼</span>ওয়ালেট</button>
+            <button class="nav-item" onclick="switchTab('withdraw')"><span>💳</span>উইথড্র</button>
+            <button class="nav-item" onclick="switchTab('profile')"><span>👤</span>প্রোফাইল</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Welcome Notification Modal -->
+<div id="welcomeModal" class="modal" style="display:flex;">
+    <div class="modal-content">
+        <h3>অফিশিয়াল নোটিশ 🎮</h3>
+        <p style="margin: 15px 0; font-size: 14px; text-align: left;">আপনি কি আমাদের প্রতিষ্ঠান থেকে ইনকাম করতে চান? কাজ আমরাই দিব। ২২টি প্রজেক্টে কাজ করার সুযোগ!</p>
+        <button class="btn" onclick="closeWelcome()">ওকে Sir 🥰</button>
+    </div>
+</div>
+
+<!-- Admin Login Modal -->
+<div id="adminModal" class="modal">
+    <div class="modal-content">
+        <h3>অ্যাডমিন প্যানেল</h3>
+        <input type="password" id="adminPin" placeholder="Enter Admin Password">
+        <button class="btn" onclick="verifyAdmin()">লগইন</button>
+        <button class="btn" style="background:#888;" onclick="document.getElementById('adminModal').style.display='none'">বাতিল</button>
+    </div>
+</div>
+
+<script>
+    let currentUser = null;
+    let balance = 10.00;
+
+    function toggleAuth() {
+        let reg = document.getElementById('registerForm');
+        let log = document.getElementById('loginForm');
+        reg.style.display = reg.style.display === 'none' ? 'block' : 'none';
+        log.style.display = log.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function handleRegister() {
+        let name = document.getElementById('regName').value;
+        let email = document.getElementById('regEmail').value;
+        if(!name || !email) { alert('সব তথ্য পূরণ করুন!'); return; }
+        currentUser = { name: name, email: email };
+        initApp();
+    }
+
+    function handleLogin() {
+        let email = document.getElementById('loginEmail').value;
+        if(!email) { alert('জিমেইল দিন!'); return; }
+        currentUser = { name: "LxMAIDUL TADER", email: email };
+        initApp();
+    }
+
+    function initApp() {
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'flex';
+        document.getElementById('proName').innerText = currentUser.name;
+        document.getElementById('proEmail').innerText = currentUser.email;
+        document.getElementById('mainBalance').innerText = balance.toFixed(2);
+    }
+
+    function closeWelcome() {
+        document.getElementById('welcomeModal').style.display = 'none';
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.content .screen').forEach(s => s.classList.remove('active'));
+        if(tabName === 'home') document.getElementById('homeTab').classList.add('active');
+        if(tabName === 'wallet') document.getElementById('walletTab').classList.add('active');
+        if(tabName === 'withdraw') document.getElementById('withdrawTab').classList.add('active');
+        if(tabName === 'profile') document.getElementById('profileTab').classList.add('active');
+        if(tabName === 'admin') document.getElementById('adminTab').classList.add('active');
+    }
+
+    function openTask(type) {
+        switchTab('task');
+        if(type === 'gmail') {
+            document.getElementById('taskTitle').innerText = "জিমেইল সাবমিট ফরম (রেট: ১০ টাকা)";
+            document.getElementById('gmailFormFields').style.display = 'block';
+            document.getElementById('fbFormFields').style.display = 'none';
+        } else {
+            document.getElementById('taskTitle').innerText = "ফেসবুক সাবমিট ফরম";
+            document.getElementById('gmailFormFields').style.display = 'none';
+            document.getElementById('fbFormFields').style.display = 'block';
+        }
+    }
+
+    function submitTask() {
+        alert('সফলভাবে টাস্ক সাবমিট হয়েছে! অ্যাডমিন অ্যাপ্রুভ করলে ব্যালেন্স যোগ হবে।');
+        balance += 10.00; // Auto update rate for gmail test
+        document.getElementById('mainBalance').innerText = balance.toFixed(2);
+        switchTab('home');
+    }
+
+    function requestWithdraw() {
+        alert('উইথড্র রিকোয়েস্ট সফলভাবে জমা হয়েছে। ৩-৫ কার্যদিবসের মধ্যে পেমেন্ট পাবেন।');
+        switchTab('wallet');
+    }
+
+    function logout() {
+        currentUser = null;
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('authScreen').style.display = 'flex';
+    }
+
+    function openSidebarMenu() {
+        let pin = prompt("অ্যাডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:");
+        if(pin === "102050") {
+            switchTab('admin');
+        } else if(pin !== null) {
+            alert('ভুল পাসওয়ার্ড!');
+        }
+    }
+</script>
+</body>
+  </html>

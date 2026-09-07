@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelancing Academy</title>
+    <style>
+        :root {
+            --primary-color: #ff7700;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .container {
+            padding: 15px;
+            max-width: 480px;
+            margin: auto;
+            margin-bottom: 80px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        #auth-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- রেজিস্ট্রেশন বা লগইন স্ক্রিন -->
+    <div id="auth-screen">
+        <div class="card" style="width: 100%; max-width: 350px; border: 2px solid #ff7700;">
+            <h3 style="text-align: center; color: var(--primary-color);">রেজিস্ট্রেশন করুন</h3>
+            <p style="text-align: center; font-size: 12px; color: #666;">অ্যাপে প্রবেশ করতে আপনার নাম ও নম্বর দিন</p>
+            
+            <label>আপনার নাম</label>
+            <input type="text" id="userName" placeholder="পূর্ণ নাম লিখুন">
+
+            <label>মোবাইল নম্বর</label>
+            <input type="text" id="userPhone" placeholder="017xxxxxxxx">
+
+            <button class="btn" onclick="registerUser()">প্রবেশ করুন</button>
+        </div>
+    </div>
+
+    <header>
+        <span id="headerTitle">BD FREELANCING ACADEMY</span>
+        <span onclick="logout()" style="font-size: 12px; cursor: pointer; background: #e06d00; padding: 5px 10px; border-radius: 5px;">লগআউট</span>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h3>জিমেইল সাবমিট ফরম</h3>
+            <label>আজকের পাসওয়ার্ড</label>
+            <input type="text" value="@rakib002" readonly style="background: #f1f1f1;">
+
+            <label>জিমেইল লিখুন</label>
+            <input type="email" placeholder="example@gmail.com">
+
+            <label>পাসওয়ার্ড লিখুন</label>
+            <input type="password" placeholder="Gmail পাসওয়ার্ড">
+
+            <button class="btn" onclick="alert('সফলভাবে সাবমিট হয়েছে!')">সাবমিট করুন</button>
+        </div>
+    </div>
+
+    <script>
+        // চেক করা ইউজার রেজিস্টার্ড কি না
+        window.onload = function() {
+            let user = localStorage.getItem('app_user');
+            if(user) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('headerTitle').innerText = user;
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
+            }
+        };
+
+        function registerUser() {
+            let name = document.getElementById('userName').value.trim();
+            let phone = document.getElementById('userPhone').value.trim();
+
+            if(name === '' || phone === '') {
+                alert('দয়া করে নাম এবং মোবাইল নম্বর দিন!');
+                return;
+            }
+
+            localStorage.setItem('app_user', name);
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('headerTitle').innerText = name;
+            location.reload();
+        }
+
+        function logout() {
+            localStorage.removeItem('app_user');
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayTapEarnBot - Global Earning Hub</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --primary-dark: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 15px; padding-bottom: 75px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 480px; }
+        
+        /* Premium Foreign Buyer / Global Banner */
+        .banner { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-radius: 16px; padding: 20px 16px; text-align: center; margin-bottom: 18px; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.12); border: 2px solid #fde68a; display: flex; align-items: center; gap: 14px; }
+        .banner-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); flex-shrink: 0; }
+        .banner-text { text-align: left; }
+        .banner-text h2 { color: #b45309; font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+        .banner-text p { font-size: 11px; color: #78350f; line-height: 1.3; }
+
+        .card { background-color: var(--card-bg); border-radius: 14px; padding: 16px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
+        .card h3 { font-size: 15px; margin-bottom: 12px; color: var(--text-color); font-weight: 700; }
+
+        /* Task Item Style with Click Action */
+        .task-item { background: #fff; padding: 12px 14px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); transition: all 0.2s; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .task-item:hover { border-color: var(--primary); background: #fffdf4; }
+        .task-info { display: flex; align-items: center; gap: 12px; }
+        .task-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .task-details h4 { font-size: 14px; color: var(--text-color); font-weight: 600; }
+        .task-details span { font-size: 11px; color: var(--text-muted); }
+        .task-price { font-size: 13px; font-weight: bold; color: #047857; background: rgba(16, 185, 129, 0.1); padding: 5px 9px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); }
+        
+        button { width: 100%; padding: 13px; border-radius: 10px; border: none; background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; font-weight: bold; font-size: 14px; cursor: pointer; transition: opacity 0.2s; margin-top: 5px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+        button:hover { opacity: 0.9; }
+        
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: var(--text-muted); font-weight: 600; }
+        input, select { width: 100%; padding: 11px; border-radius: 9px; border: 1px solid var(--border-color); background-color: #f8fafc; color: var(--text-color); font-size: 14px; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 3px rgba(245,158,11,0.15); }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; color: var(--text-muted); font-size: 11px; cursor: pointer; text-decoration: none; flex: 1; font-weight: 500; }
+        .nav-item.active { color: #d97706; font-weight: 700; }
+        .nav-item svg { width: 22px; height: 22px; margin-bottom: 2px; fill: currentColor; }
+
+        .hidden { display: none !important; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .stat-box { background-color: var(--card-bg); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .stat-box span { display: block; font-size: 18px; font-weight: bold; color: #d97706; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Home View -->
+    <div id="homeView">
+        <!-- Foreign Buyer / Global Banner -->
+        <div class="banner">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Global Buyer" class="banner-img">
+            <div class="banner-text">
+                <h2>🌍 Global Task Partner</h2>
+                <p>Complete verified tasks from international clients & get instant dollar payouts safely.</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box" style="color: var(--text-muted);">Total Balance <span id="userBalance">$0.00</span></div>
+            <div class="stat-box" style="color: var(--text-muted);">Completed <span id="userTasks">0</span></div>
+        </div>
+
+        <div class="card">
+            <h3>⭐ Available Tasks</h3>
+            
+            <!-- Gmail Task -->
+            <div class="task-item" onclick="completeTask(0.10, 'Gmail Task')">
+                <div class="task-info">
+                    <div class="task-icon" style="background: #ea4335;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+                    <div class="task-details">
+                        <h4>Gmail Verification</h4>
+                        <span>Submit verified account</span>
+                    </div>
+                </div>
+                <div class="task-price">$0.10</div>
+            </div>
+
+            <!-- Facebook Task -->
+            <div class="task-item" onclick="completeTask(0.05, 'Facebook Task')">
+                <div class="task-info">
+                    <div class="task-icon" style="background: #1877f2;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </div>
+                    <div class="task-details">
+                        <h4>Facebook Engagement</h4>
+                        <span>Like & Follow Page</span>
+                    </div>
+                </div>
+                <div class="task-price">$0.05</div>
+            </div>
+
+            <!-- Instagram Task -->
+            <div class="task-item" onclick="completeTask(0.08, 'Instagram Task')">
+                <div class="task-info">
+                    <div class="task-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </div>
+                    <div class="task-details">
+                        <h4>Instagram Follow</h4>
+                        <span>Follow Global Profile</span>
+                    </div>
+                </div>
+                <div class="task-price">$0.08</div>
+            </div>
+
+            <button onclick="completeTask(0.10, 'General Task')" style="margin-top: 12px;">Start Doing Tasks</button>
+        </div>
+    </div>
+
+    <!-- Withdraw View -->
+    <div id="withdrawView" class="hidden">
+        <div class="card">
+            <h3>💳 Request Withdrawal</h3>
+            <div class="form-group">
+                <label>Select Gateway</label>
+                <select id="withdrawMethod">
+                    <option value="binance">Binance Pay (USDT)</option>
+                    <option value="payeer">Payeer</option>
+                    <option value="bkash">Bkash (BD)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Wallet / Account Number</label>
+                <input type="text" id="withdrawAccount" placeholder="Enter account details">
+            </div>
+            <div class="form-group">
+                <label>Amount ($)</label>
+                <input type="number" id="withdrawAmount" placeholder="Minimum $5.00">
+            </div>
+            <button onclick="requestWithdraw()">Submit Payout Request</button>
+        </div>
+    </div>
+
+    <!-- Balance View -->
+    <div id="balanceView" class="hidden">
+        <div class="card" style="text-align: center; padding: 30px 15px;">
+            <h3>💰 Available Earnings</h3>
+            <h1 id="balanceBig" style="color: #d97706; font-size: 34px; margin: 15px 0; font-weight: 800;">$0.00</h1>
+            <p style="font-size: 13px; color: var(--text-muted);">Total tasks completed successfully.</p>
+        </div>
+    </div>
+
+    <!-- Admin / My Account View -->
+    <div id="accountView" class="hidden">
+        <div class="card">
+            <h3>🔒 Admin & Account Control</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Enter admin passcode to access management panel.</p>
+            <div class="form-group">
+                <label>Admin Passcode</label>
+                <input type="password" id="adminPassInput" placeholder="Enter passcode">
+            </div>
+            <button onclick="checkAdminLogin()">Login as Admin</button>
+        </div>
+        
+        <div id="adminPanelBox" class="card hidden" style="border-color: var(--danger);">
+            <h3 style="color: var(--danger);">⚙️ Admin Panel Active</h3>
+            <div class="form-group">
+                <label>Add New Task Title</label>
+                <input type="text" id="adminNewTask" placeholder="e.g., Twitter Retweet">
+            </div>
+            <div class="form-group">
+                <label>Reward ($)</label>
+                <input type="number" id="adminNewReward" placeholder="0.05">
+            </div>
+            <button style="background: var(--danger);" onclick="addNewAdminTask()">Publish Task</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a class="nav-item active" onclick="switchTab('home', this)">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Home</span>
+        </a>
+        <a class="nav-item" onclick="switchTab('withdraw', this)">
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            <span>Withdraw</span>
+        </a>
+        <a class="nav-item" onclick="switchTab('balance', this)">
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.8V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0.69-.99 1.49-2.27-1.5-2.27z"/></svg>
+            <span>Balance</span>
+        </a>
+        <a class="nav-item" onclick="switchTab('account', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>My Account</span>
+        </a>
+    </div>
+</div>
+
+<script>
+    let balance = 0.20;
+    let taskCount = 2;
+
+    function switchTab(tabName, element) {
+        document.getElementById('homeView').classList.add('hidden');
+        document.getElementById('withdrawView').classList.add('hidden');
+        document.getElementById('balanceView').classList.add('hidden');
+        document.getElementById('accountView').classList.add('hidden');
+        
+        document.getElementById(tabName + 'View').classList.remove('hidden');
+
+        let items = document.querySelectorAll('.nav-item');
+        items.forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    function completeTask(reward, taskName) {
+        balance += reward;
+        taskCount += 1;
+        document.getElementById('userBalance').innerText = '$' + balance.toFixed(2);
+        document.getElementById('balanceBig').innerText = '$' + balance.toFixed(2);
+        document.getElementById('userTasks').innerText = taskCount;
+        alert(taskName + ' clicked! Complete verification to get $' + reward.toFixed(2));
+    }
+
+    function requestWithdraw() {
+        let acc = document.getElementById('withdrawAccount').value;
+        let amt = document.getElementById('withdrawAmount').value;
+        if (!acc || !amt) {
+            alert('Please fill in all details.');
+            return;
+        }
+        alert('Withdrawal request submitted successfully!');
+        document.getElementById('withdrawAccount').value = '';
+        document.getElementById('withdrawAmount').value = '';
+    }
+
+    function checkAdminLogin() {
+        let pass = document.getElementById('adminPassInput').value;
+        if (pass === "102050") {
+            document.getElementById('adminPanelBox').classList.remove('hidden');
+            alert('Admin login successful!');
+        } else {
+            alert('Incorrect Passcode!');
+        }
+    }
+
+    function addNewAdminTask() {
+        let title = document.getElementById('adminNewTask').value;
+        if (!title) {
+            alert('Enter task title.');
+            return;
+        }
+        alert('New global task published successfully!');
+        document.getElementById('adminNewTask').value = '';
+        document.getElementById('adminNewReward').value = '';
+    }
+</script>
+
+</body>
+  </html>

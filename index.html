@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD FREELANCING ACADEMY</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(180deg, #ff8c00 0%, #fff7ed 15%, #fef3c7 100%); color: #1e293b; padding: 12px; padding-bottom: 90px; min-height: 100vh; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: linear-gradient(135deg, #ff7b00, #ff9e00); padding: 12px 18px; border-radius: 14px; box-shadow: 0 4px 15px rgba(255,140,0,0.4); color: #fff; }
+        .menu-btn { background: none; border: none; color: #fff; font-size: 26px; cursor: pointer; }
+        .logo-title { font-weight: 800; font-size: 16px; letter-spacing: 0.5px; color: #fff; }
+        
+        .sidebar { height: 100%; width: 0; position: fixed; z-index: 50; top: 0; left: 0; background-color: #0f172a; overflow-x: hidden; transition: 0.3s; padding-top: 60px; box-shadow: 5px 0 20px rgba(0,0,0,0.8); border-right: 1px solid #1e293b; }
+        .sidebar a { padding: 14px 24px; text-decoration: none; font-size: 16px; color: #cbd5e1; display: block; transition: 0.2s; cursor: pointer; }
+        .sidebar a:hover { color: #fff; background-color: #1e293b; }
+        .sidebar .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #ef4444; }
+
+        .banner-card { background: linear-gradient(135deg, #1e293b, #0f172a); text-align: center; padding: 15px; border-radius: 16px; margin-bottom: 15px; border: 2px solid #ff9e00; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        .card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255, 165, 0, 0.3); border-radius: 16px; padding: 16px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+        
+        .wallet-box { display: flex; justify-content: space-between; background: #fff; padding: 14px; border-radius: 12px; margin-top: 10px; text-align: center; border: 1px solid #fed7aa; }
+        .wallet-item { flex: 1; border-right: 1px solid #fed7aa; }
+        .wallet-item:last-child { border-right: none; }
+        .wallet-item span { font-size: 11px; color: #64748b; display: block; text-transform: uppercase; font-weight: 600; }
+        .wallet-item strong { font-size: 18px; color: #f97316; }
+
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+        .service-box { background: #fff; padding: 14px 8px; text-align: center; border-radius: 12px; cursor: pointer; border: 1px solid #fed7aa; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .service-box:hover { border-color: #f97316; transform: translateY(-2px); }
+        .service-box img { width: 32px; height: 32px; object-fit: contain; margin-bottom: 4px; }
+        .service-box span { font-size: 11px; color: #f97316; display: block; margin-top: 4px; font-weight: 700; }
+
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; color: #0f172a; outline: none; font-size: 14px; }
+        input:focus, textarea:focus { border-color: #f97316; }
+        button.action-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 12px rgba(249,115,22,0.4); }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(135deg, #ff7b00, #ff9e00); display: flex; justify-content: space-around; padding: 8px 0; border-top: 2px solid #ffedd5; z-index: 40; box-shadow: 0 -4px 15px rgba(255,140,0,0.3); }
+        .nav-item { text-align: center; color: #fff; font-size: 11px; cursor: pointer; flex: 1; font-weight: 600; opacity: 0.8; }
+        .nav-item.active { opacity: 1; transform: scale(1.05); }
+        .nav-item div { font-size: 20px; margin-bottom: 2px; }
+
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .modal-content { background: #ffffff; color: #0f172a; padding: 22px; border-radius: 16px; width: 92%; max-width: 380px; text-align: center; max-height: 90vh; overflow-y: auto; border: 1px solid #cbd5e1; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        .req-card { background: #f8fafc; padding: 12px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; text-align: left; border: 1px solid #e2e8f0; }
+        .req-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .btn-approve { background: #10b981; border: none; color: #fff; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; flex: 1; }
+        .btn-reject { background: #ef4444; border: none; color: #fff; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; flex: 1; }
+        
+        .receipt-box { background: #f8fafc; color: #0f172a; padding: 20px; border-radius: 14px; text-align: left; font-size: 13px; border: 2px dashed #cbd5e1; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
+    </style>
+</head>
+<body>
+
+    <div id="welcomeNoticeModal" class="modal" style="display: flex; z-index: 300;">
+        <div class="modal-content">
+            <div style="margin-bottom: 12px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" style="width: 50px; height: 50px;">
+            </div>
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 12px; color: #0f172a;">অফিসিয়াল নোটিশ 🕹️</h2>
+            <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; text-align: left; color: #334155;">
+                🌼 আপনি কি আমাদের প্রতিষ্ঠান থেকে ইনকাম করতে চান? ! 🎗️ কাজ কোথায় পাবেন? 🎗️ কাজ আমরাই দিবো ✅ 🎗️ ২২ টি প্রজেক্টে কাজ করার সুযোগ 🤗 🎗️ তাহলে আর দেরি কিসের আজই জয়েন করুন আমাদের অফিসে চ্যানেলে 📲 সবার আগে কাজ পেতে এখনই Official Telegram Channel-Join করুন। 👇👇👇👇👇
+            </p>
+            <a href="https://t.me/your_channel_link" target="_blank" style="display: block; text-decoration: none; background: #2563eb; color: #fff; padding: 12px; border-radius: 12px; font-weight: bold; margin-bottom: 10px; font-size: 14px;">📲 জয়েন করুন 📲</a>
+            <button class="action-btn" style="background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; font-weight: bold;" onclick="closeWelcomeNotice()">Ok SIR 🥰</button>
+        </div>
+    </div>
+
+    <div class="header">
+        <button class="menu-btn" onclick="openNav()">☰</button>
+        <div class="logo-title">BD FREELANCING ACADEMY</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 20px; cursor: pointer;" onclick="openAdminModal()">🛡️</span>
+            <span style="font-size: 20px; cursor: pointer;" onclick="showProfile()">👤</span>
+        </div>
+    </div>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeNav()">&times;</a>
+        <a href="#" onclick="showProfile(); closeNav();">👤 আমার প্রোফাইল</a>
+        <a href="#" onclick="openAdminModal(); closeNav();">🛡️ অ্যাডমিন প্যানেল</a>
+        <a href="#" onclick="logoutUser(); closeNav();">🚪 লগআউট</a>
+    </div>
+
+    <div class="banner-card">
+        <div style="font-size: 18px; color: #f97316; font-weight: 800; margin-bottom: 4px;">🚀 12000 টাকা মাসিক সেলারি</div>
+        <h2 style="font-size: 14px; margin-bottom: 6px; color: #fff;">AI FREELANCING ACADEMY</h2>
+        <p style="font-size: 11px; color: #cbd5e1; background: rgba(255,255,255,0.1); display: inline-block; padding: 4px 12px; border-radius: 20px;">⚡ প্রতিদিন ইনকাম প্রতিদিন পেমেন্ট</p>
+    </div>
+
+    <div class="card">
+        <h3 style="font-size: 15px; margin-bottom: 8px; color: #0f172a;">💳 ওয়ালেট ও ব্যালেন্স</h3>
+        <div class="wallet-box">
+            <div class="wallet-item">
+                <span>Total Balance</span>
+                <strong id="userBalance">৳ 0.00</strong>
+            </div>
+            <div class="wallet-item">
+                <span>Today Earned</span>
+                <strong id="todayEarn">৳ 0.00</strong>
+            </div>
+        </div>
+        <button class="action-btn" style="margin-top: 14px;" onclick="openWithdrawModal()">💸 উইথড্র করুন (মিন: ৫০৳)</button>
+    </div>
+
+    <div class="card">
+        <h3 style="font-size: 15px; color: #0f172a;">🔥 সোশ্যাল সার্ভিস ও জিমেইল সেল</h3>
+        <div class="services-grid">
+            <div class="service-box" onclick="openTaskModal('Gmail')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Gmail">
+                <strong style="font-size: 13px; display:block; color:#0f172a;">Gmail</strong>
+                <span id="rateGmail">৳ 10/ পিস</span>
+            </div>
+            <div class="service-box" onclick="openTaskModal('Facebook')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook">
+                <strong style="font-size: 13px; display:block; color:#0f172a;">Facebook</strong>
+                <span id="rateFb">৳ 3/ কাজ</span>
+            </div>
+            <div class="service-box" onclick="openTaskModal('Instagram')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
+                <strong style="font-size: 13px; display:block; color:#0f172a;">Instagram</strong>
+                <span id="rateIg">৳ 3/ কাজ</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="location.reload()">
+            <div>🏠</div>হোম
+        </div>
+        <div class="nav-item" onclick="openWithdrawModal()">
+            <div>💸</div>উইথড্র
+        </div>
+        <div class="nav-item" onclick="showProfile()">
+            <div>👤</div>প্রোফাইল
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h3>🔐 ইউজার লগইন</h3>
+            <input type="text" id="loginPhone" placeholder="ফোন নম্বর লিখুন">
+            <input type="password" id="loginPass" placeholder="পাসওয়ার্ড লিখুন">
+            <button class="action-btn" onclick="submitLogin()">লগইন করুন</button>
+            <p style="font-size: 12px; color: #64748b; margin-top: 15px;">অ্যাকাউন্ট নেই? <span style="color: #f97316; cursor: pointer; text-decoration: underline;" onclick="switchToRegister()">রেজিস্ট্রেশন করুন</span></p>
+        </div>
+    </div>
+
+    <div id="regModal" class="modal">
+        <div class="modal-content">
+            <h3>📝 নতুন রেজিস্ট্রেশন</h3>
+            <input type="text" id="regName" placeholder="আপনার পূর্ণ নাম">
+            <input type="email" id="regEmail" placeholder="ইমেইল অ্যাড্রেস">
+            <input type="text" id="regPhone" placeholder="ফোন নম্বর">
+            <input type="password" id="regPass" placeholder="গোপন পাসওয়ার্ড">
+            <button class="action-btn" onclick="submitRegistration()">রেজিস্ট্রেশন সম্পন্ন</button>
+            <p style="font-size: 12px; color: #64748b; margin-top: 15px;">অ্যাকাউন্ট আছে? <span style="color: #f97316; cursor: pointer; text-decoration: underline;" onclick="switchToLogin()">লগইন করুন</span></p>
+        </div>
+    </div>
+
+    <div id="gmailModal" class="modal">
+        <div class="modal-content">
+            <h3>📧 জিমেইল সেল করুন</h3>
+            <input type="email" id="gmailUser" placeholder="জিমেইল এড্রেস">
+            <input type="password" id="gmailPass" placeholder="পাসওয়ার্ড">
+            <button class="action-btn" onclick="submitTask('Gmail')">সাবমিট করুন</button>
+            <button class="action-btn" style="background: #ef4444; margin-top: 8px;" onclick="closeAllModals()">বাতিল</button>
+        </div>
+    </div>
+
+    <div id="fbModal" class="modal">
+        <div class="modal-content">
+            <h3>📘 ফেসবুক সার্ভিস</h3>
+            <input type="text" id="fbUid" placeholder="ফেসবুক UID দিন">
+            <textarea id="fbCookies" placeholder="ফেসবুক Cookies দিন" rows="3"></textarea>
+            <button class="action-btn" onclick="submitTask('Facebook')">সাবমিট করুন</button>
+            <button class="action-btn" style="background: #ef4444; margin-top: 8px;" onclick="closeAllModals()">বাতিল</button>
+        </div>
+    </div>
+
+    <div id="igModal" class="modal">
+        <div class="modal-content">
+            <h3>📸 ইনস্টাগ্রাম সার্ভিস</h3>
+            <input type="text" id="igUsername" placeholder="ইনস্টাগ্রাম ইউজারনেম">
+            <textarea id="igCookies" placeholder="ইনস্টাগ্রাম Cookies দিন" rows="3"></textarea>
+            <button class="action-btn" onclick="submitTask('Instagram')">সাবমিট করুন</button>
+            <button class="action-btn" style="background: #ef4444; margin-top: 8px;" onclick="closeAllModals()">বাতিল</button>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <h3>👤 ইউজারের প্রোফাইল</h3>
+            <div id="profileDetails" style="text-align: left; font-size: 14px; margin: 15px 0; color: #334155; line-height: 1.6;"></div>
+            <button class="action-btn" onclick="closeProfileModal()">বন্ধ করুন</button>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <h3>💸 উইথড্র রিকোয়েস্ট (মিন: ৫০ টাকা)</h3>
+            <select id="withdrawMethod">
+                <option value="Bkash">বিকাশ (Bkash)</option>
+                <option value="Nagad">নগদ (Nagad)</option>
+            </select>
+            <input type="text" id="withdrawPhone" placeholder="বিকাশ/নগদ নম্বর">
+            <input type="number" id="withdrawAmount" placeholder="টাকার পরিমাণ (কমপক্ষে ৫০)">
+            <button class="action-btn" onclick="sendWithdrawRequest()">রিকোয়েস্ট পাঠান</button>
+            <button class="action-btn" style="background: #ef4444; margin-top: 8px;" onclick="closeWithdrawModal()">বাতিল</button>
+        </div>
+    </div>
+
+    <div id="withdrawReceiptModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #10b981; margin-bottom: 12px;">✅ উইথড্র সফল হয়েছে</h3>
+            <div class="receipt-box" id="receiptDetailsContent"></div>
+            <button class="action-btn" style="margin-top: 15px;" onclick="closeReceiptModal()">ঠিক আছে</button>
+        </div>
+    </div>
+
+    <div id="adminLoginModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #f97316; margin-bottom: 10px;">🛡️ অ্যাডমিন প্যানেল</h3>
+            <input type="password" id="adminPassInput" placeholder="অ্যাডমিন পাসওয়ার্ড দিন">
+            <button class="action-btn" onclick="loginAdmin()">লগইন করুন</button>
+            <button class="action-btn" style="background: #ef4444; margin-top: 8px;" onclick="closeAdminLoginModal()">বাতিল</button>
+        </div>
+    </div>
+
+    <div id="adminDashboardModal" class="modal">
+        <div class="modal-content" style="max-width: 420px;">
+            <h3 style="color: #f97316; margin-bottom: 12px;">⚙️ অ্যাডমিন কন্ট্রোল প্যানেল</h3>
+            
+            <label style="font-size: 13px; color: #64748b; text-align: left; display: block;">জিমেইল রেট (টাকা):</label>
+            <input type="number" id="setGmailRate" value="10">
+            
+            <label style="font-size: 13px; color: #64748b; text-align: left; display: block;">ফেসবুক রেট (টাকা):</label>
+            <input type="number" id="setFbRate" value="3">
+
+            <label style="font-size: 13px; color: #64748b; text-align: left; display: block;">ইনস্টাগ্রাম রেট (টাকা):</label>
+            <input type="number" id="setIgRate" value="3">
+
+            <button class="action-btn" onclick="updateRates()">রেট আপডেট করুন</button>
+
+            <h4 style="margin-top: 15px; font-size: 14px; color: #f97316; text-align: left;">📥 ইউজারদের রিকোয়েস্ট লিস্ট:</h4>
+            <div id="adminTaskLog" style="max-height: 200px; overflow-y: auto; margin-top: 8px; text-align: left;">
+                <p style="font-size: 12px; color: #64748b; text-align: center;">কোনো নতুন রিকোয়েস্ট নেই।</p>
+            </div>
+            
+            <button class="action-btn" style="background: #ef4444; margin-top: 15px;" onclick="closeAdminDashboard()">প্যানেল বন্ধ করুন</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const isLogged = localStorage.getItem('t2z_logged_in');
+            const savedUser = localStorage.getItem('t2z_user');
+
+            if (isLogged === 'true' && savedUser) {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('regModal').style.display = 'none';
+                document.getElementById('welcomeNoticeModal').style.display = 'flex';
+                loadUserData();
+            } else if (savedUser) {
+                document.getElementById('loginModal').style.display = 'flex';
+            } else {
+                document.getElementById('regModal').style.display = 'flex';
+            }
+            loadRates();
+        }
+
+        function closeWelcomeNotice() { document.getElementById('welcomeNoticeModal').style.display = 'none'; }
+        function switchToRegister() { document.getElementById('loginModal').style.display = 'none'; document.getElementById('regModal').style.display = 'flex'; }
+        function switchToLogin() { document.getElementById('regModal').style.display = 'none'; document.getElementById('loginModal').style.display = 'flex'; }
+
+        function submitRegistration() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+
+            if(name && email && phone && pass) {
+                const userData = { name: name, email: email, phone: phone, pass: pass, balance: 0.00, today: 0.00 };
+                localStorage.setItem('t2z_user', JSON.stringify(userData));
+                localStorage.setItem('t2z_logged_in', 'true');
+                document.getElementById('regModal').style.display = 'none';
+                loadUserData();
+                document.getElementById('welcomeNoticeModal').style.display = 'flex';
+            } else {
+                alert('সব তথ্য পূরণ করুন!');
+            }
+        }
+
+        function submitLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const savedUser = JSON.parse(localStorage.getItem('t2z_user'));
+
+            if(savedUser && savedUser.phone === phone && savedUser.pass === pass) {
+                localStorage.setItem('t2z_logged_in', 'true');
+                document.getElementById('loginModal').style.display = 'none';
+                loadUserData();
+                document.getElementById('welcomeNoticeModal').style.display = 'flex';
+            } else {
+                alert('ভুল নম্বর বা পাসওয়ার্ড!');
+            }
+        }
+
+        function loadUserData() {
+            const user = JSON.parse(localStorage.getItem('t2z_user'));
+            if(user) {
+                document.getElementById('userBalance').innerText = '৳ ' + user.balance.toFixed(2);
+                document.getElementById('todayEarn').innerText = '৳ ' + user.today.toFixed(2);
+            }
+        }
+
+        function showProfile() {
+            const user = JSON.parse(localStorage.getItem('t2z_user'));
+            if(user) {
+                document.getElementById('profileDetails').innerHTML = `
+                    ইউজারনেম: <b>${user.name}</b><br>
+                    ইমেইল: <b>${user.email}</b><br>
+                    ফোন নম্বর: <b>${user.phone}</b><br>
+                    স্ট্যাটাস: <span style="color: #10b981;">সক্রিয়</span>
+                `;
+                document.getElementById('profileModal').style.display = 'flex';
+            }
+        }
+
+        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+        function logoutUser() { localStorage.setItem('t2z_logged_in', 'false'); location.reload(); }
+        function openNav() { document.getElementById("mySidebar").style.width = "250px"; }
+        function closeNav() { document.getElementById("mySidebar").style.width = "0"; }
+
+        function openTaskModal(type) {
+            if(type === 'Gmail') document.getElementById('gmailModal').style.display = 'flex';
+            if(type === 'Facebook') document.getElementById('fbModal').style.display = 'flex';
+            if(type === 'Instagram') document.getElementById('igModal').style.display = 'flex';
+        }
+
+        function closeAllModals() {
+            document.getElementById('gmailModal').style.display = 'none';
+            document.getElementById('fbModal').style.display = 'none';
+            document.getElementById('igModal').style.display = 'none';
+        }
+
+        function submitTask(type) {
+            const user = JSON.parse(localStorage.getItem('t2z_user'));
+            let details = "", rateKey = "rate_gmail";
+            
+            if(type === 'Gmail') {
+                const email = document.getElementById('gmailUser').value.trim();
+                const pass = document.getElementById('gmailPass').value.trim();
+                if(!email || !pass) { alert('সব তথ্য পূরণ করুন!'); return; }
+                details = `জিমেইল: ${email} | পাস: ${pass}`;
+                rateKey = 'rate_gmail';
+            } else if(type === 'Facebook') {
+                const uid = document.getElementById('fbUid').value.trim();
+                const cookies = document.getElementById('fbCookies').value.trim();
+                if(!uid || !cookies) { alert('সব তথ্য পূরণ করুন!'); return; }
+                details = `FB UID: ${uid}`;
+                rateKey = 'rate_fb';
+            } else if(type === 'Instagram') {
+                const uname = document.getElementById('igUsername').value.trim();
+                const cookies = document.getElementById('igCookies').value.trim();
+                if(!uname || !cookies) { alert('সব তথ্য পূরণ করুন!'); return; }
+                details = `IG User: ${uname}`;
+                rateKey = 'rate_ig';
+            }
+
+            const defaultRates = { rate_gmail: 10, rate_fb: 3, rate_ig: 3 };
+            const reward = parseFloat(localStorage.getItem(rateKey) || defaultRates[rateKey]);
+            
+            saveToAdmin(type, details, user.name, reward, 'task', 0);
+            closeAllModals();
+            alert(type + ' সফলভাবে সাবমিট হয়েছে!');
+        }
+
+        function saveToAdmin(type, details, userName, reward, category, withdrawAmount) {
+            let logs = JSON.parse(localStorage.getItem('t2z_admin_logs')) || [];
+            const timeStr = new Date().toLocaleString('bn-BD');
+            logs.unshift({ id: Date.now(), type, details, user: userName, reward, category, withdrawAmount, time: timeStr });
+            localStorage.setItem('t2z_admin_logs', JSON.stringify(logs));
+        }
+
+        function openWithdrawModal() { 
+            const user = JSON.parse(localStorage.getItem('t2z_user'));
+            document.getElementById('withdrawPhone').value = user.phone;
+            document.getElementById('withdrawModal').style.display = 'flex'; 
+        }
+        function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
+
+        function sendWithdrawRequest() {
+            const user = JSON.parse(localStorage.getItem('t2z_user'));
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('withdrawMethod').value;
+            const phone = document.getElementById('withdrawPhone').value.trim();
+
+            if(!amount || amount < 50) { alert('সর্বনিম্ন উইথড্র ৫০ টাকা!'); return; }
+            if(user.balance < amount) { alert('পর্যাপ্ত ব্যালেন্স নেই!'); return; }
+
+            user.balance -= amount;
+            localStorage.setItem('t2z_user', JSON.stringify(user));
+            loadUserData();
+
+            const txId = 'TXN' + Math.floor(10000000 + Math.random() * 90000000);
+            saveToAdmin('Withdraw', `উইথড্র: ৳${amount} (${method} - ${phone})`, user.name, amount, 'withdraw', amount);
+            closeWithdrawModal();
+
+            document.getElementById('receiptDetailsContent').innerHTML = `
+                <div class="receipt-row"><span>মেথড:</span> <b>${method}</b></div>
+                <div class="receipt-row"><span>এমাউন্ট:</span> <b style="color: #10b981;">৳ ${amount}</b></div>
+                <div class="receipt-row"><span>নম্বর:</span> <b>${phone}</b></div>
+                <div class="receipt-row"><span>ট্রানজাকশন আইডি:</span> <b>${txId}</b></div>
+            `;
+            document.getElementById('withdrawReceiptModal').style.display = 'flex';
+        }
+
+        function closeReceiptModal() { document.getElementById('withdrawReceiptModal').style.display = 'none'; }
+        function openAdminModal() { document.getElementById('adminLoginModal').style.display = 'flex'; }
+        function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
+
+        function loginAdmin() {
+            if(document.getElementById('adminPassInput').value === '102050') {
+                closeAdminLoginModal();
+                document.getElementById('adminDashboardModal').style.display = 'flex';
+                loadAdminLogs();
+            } else { alert('ভুল পাসওয়ার্ড!'); }
+        }
+
+        function closeAdminDashboard() { document.getElementById('adminDashboardModal').style.display = 'none'; }
+
+        function updateRates() {
+            localStorage.setItem('rate_gmail', document.getElementById('setGmailRate').value);
+            localStorage.setItem('rate_fb', document.getElementById('setFbRate').value);
+            localStorage.setItem('rate_ig', document.getElementById('setIgRate').value);
+            loadRates();
+            alert('রেট আপডেট হয়েছে!');
+        }
+
+        function loadRates() {
+            document.getElementById('rateGmail').innerText = '৳ ' + (localStorage.getItem('rate_gmail') || 10) + '/ পিস';
+            document.getElementById('setGmailRate').value = localStorage.getItem('rate_gmail') || 10;
+            document.getElementById('rateFb').innerText = '৳ ' + (localStorage.getItem('rate_fb') || 3) + '/ কাজ';
+            document.getElementById('setFbRate').value = localStorage.getItem('rate_fb') || 3;
+            document.getElementById('rateIg').innerText = '৳ ' + (localStorage.getItem('rate_ig') || 3) + '/ কাজ';
+            document.getElementById('setIgRate').value = localStorage.getItem('rate_ig') || 3;
+        }
+
+        function loadAdminLogs() {
+            const logs = JSON.parse(localStorage.getItem('t2z_admin_logs')) || [];
+            let html = logs.length === 0 ? '<p style="font-size: 12px; color: #64748b; text-align: center;">কোনো রিকোয়েস্ট নেই।</p>' : '';
+            
+            logs.forEach((t, index) => {
+                html += `
+                    <div class="req-card">
+                        <div style="color: #f97316; font-weight: bold;">#${index+1} (${t.type}) - ইউজার: ${t.user}</div>
+                        <div style="font-size: 13px; color: #334155;">${t.details}</div>
+                        <div style="font-size: 11px; color: #64748b;">সময়: ${t.time}</div>
+                        <div class="req-actions">
+                            <button class="btn-approve" onclick="handleReq(${t.id}, 'approve')">অ্যাপ্রুভ</button>
+                            <button class="btn-reject" onclick="handleReq(${t.id}, 'reject')">রিজেক্ট (রিফান্ড)</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('adminTaskLog').innerHTML = html;
+        }
+
+        function handleReq(id, action) {
+            let logs = JSON.parse(localStorage.getItem('t2z_admin_logs')) || [];
+            const index = logs.findIndex(t => t.id === id);
+            
+            if(index !== -1) {
+                const req = logs[index];
+                let user = JSON.parse(localStorage.getItem('t2z_user'));
+
+                if(action === 'approve') {
+                    if(req.category === 'task') {
+                        if(user && user.name === req.user) {
+                            user.balance += req.reward;
+                            user.today += req.reward;
+                            localStorage.setItem('t2z_user', JSON.stringify(user));
+                            loadUserData();
+                        }
+                        alert('টাস্ক অ্যাপ্রুভ হয়েছে এবং ব্যালেন্সে টাকা যোগ হয়েছে!');
+                    } else {
+                        alert('উইথড্র রিকোয়েস্ট সফলভাবে সম্পন্ন হয়েছে!');
+                    }
+                } else {
+                    if(req.category === 'withdraw') {
+                        if(user && user.name === req.user) {
+                            user.balance += req.withdrawAmount;
+                            localStorage.setItem('t2z_user', JSON.stringify(user));
+                            loadUserData();
+                        }
+                        alert('রিকোয়েস্ট রিজেক্ট করা হয়েছে এবং উইথড্রর টাকা ইউজারের ব্যালেন্সে অটো রিফান্ড হয়ে গেছে!');
+                    } else {
+                        alert('টাস্ক রিকোয়েস্ট রিজেক্ট করা হয়েছে!');
+                    }
+                }
+                
+                logs.splice(index, 1);
+                localStorage.setItem('t2z_admin_logs', JSON.stringify(logs));
+                loadAdminLogs();
+            }
+        }
+    </script>
+</body>
+      </html>

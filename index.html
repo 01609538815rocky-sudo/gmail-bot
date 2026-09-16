@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskEarn BD - Mini App</title>
+    <style>
+        :root {
+            --primary-color: #ff6600;
+            --bg-color: #f4f6f9;
+            --text-dark: #333333;
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 75px; }
+        
+        /* Top Header */
+        .header { background: var(--primary-color); color: var(--white); padding: 12px; text-align: center; font-size: 16px; font-weight: bold; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .container { padding: 12px; }
+        
+        /* Banner Box */
+        .banner-box { background: var(--white); border-radius: 10px; padding: 10px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; font-weight: bold; color: #555; }
+        .banner-box img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; margin-top: 5px; }
+
+        /* Leaderboard */
+        .leaderboard-section { background: var(--white); border-radius: 10px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .leaderboard-title { font-size: 15px; font-weight: bold; margin-bottom: 10px; color: #d35400; }
+        .rank-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #f1f1f1; font-size: 13px; }
+
+        /* Task Text Buttons */
+        .task-card { background: var(--white); padding: 14px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--primary-color); }
+        .task-info { display: flex; align-items: center; gap: 12px; }
+        .task-icon { font-size: 22px; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--primary-color); display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
+        .nav-item { color: var(--white); text-align: center; font-size: 11px; cursor: pointer; text-decoration: none; font-weight: 600; }
+
+        /* Forms */
+        .form-container { background: var(--white); padding: 15px; border-radius: 10px; margin-top: 10px; display: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .form-container input { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .btn { background: var(--primary-color); color: var(--white); border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">BD FREELANCER ACADEMY</div>
+
+    <div class="container">
+        <!-- Banner Section -->
+        <div class="banner-box">
+            <span>🖼️ Banner</span>
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60" alt="USA Task Banner">
+        </div>
+
+        <!-- Top 10 Leaderboard (Initially Zero) -->
+        <div class="leaderboard-section">
+            <div class="leaderboard-title">🏆 সেরা ১০ ইনকামকারী (শুরুতে জিরো)</div>
+            <div id="leaderboardList"></div>
+        </div>
+
+        <!-- Task Text Buttons -->
+        <div class="task-card" onclick="openTaskForm('gmail')">
+            <div class="task-info">
+                <span class="task-icon">📧</span>
+                <div>
+                    <strong>জিমেইল টাস্ক</strong>
+                    <div style="font-size: 11px; color: #666;">রেট: ১০ টাকা</div>
+                </div>
+            </div>
+            <span>➔</span>
+        </div>
+
+        <div class="task-card" onclick="openTaskForm('facebook')">
+            <div class="task-info">
+                <span class="task-icon">📘</span>
+                <div>
+                    <strong>ফেসবুক টাস্ক</strong>
+                    <div style="font-size: 11px; color: #666;">রেট: ৩ টাকা</div>
+                </div>
+            </div>
+            <span>➔</span>
+        </div>
+
+        <div class="task-card" onclick="openTaskForm('instagram')">
+            <div class="task-info">
+                <span class="task-icon">📸</span>
+                <div>
+                    <strong>ইনস্টাগ্রাম টাস্ক</strong>
+                    <div style="font-size: 11px; color: #666;">রেট: ৩ টাকা</div>
+                </div>
+            </div>
+            <span>➔</span>
+        </div>
+
+        <!-- Dynamic Task Form Box -->
+        <div class="form-container" id="taskFormContainer">
+            <h3 id="formTitle" style="color: var(--primary-color); font-size: 15px; margin-bottom: 8px;"></h3>
+            <div id="formFields"></div>
+            <button class="btn" onclick="submitTask()">সাবমিট করুন</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="alert('হোম পেজে আছেন')">🏠 হোম</div>
+        <div class="nav-item" onclick="alert('ওয়ালেট পেজ')">💰 ওয়ালেট</div>
+        <div class="nav-item" onclick="alert('উইথড্র অপশন: বিকাশ/নগদ/রকেট (মিনিমাম ৫০ টাকা)')">💸 উইথড্র</div>
+        <div class="nav-item" onclick="alert('প্রোফাইল পেজ')">👤 প্রোফাইল</div>
+    </div>
+
+    <script>
+        // Load Leaderboard 1 to 10 with 0 balance
+        function loadLeaderboard() {
+            let listHTML = '';
+            for(let i = 1; i <= 10; i++) {
+                listHTML += `<div class="rank-item"><span>Rank #${i} - User_${i}</span> <span style="font-weight:bold; color:#e67e22;">৳ 0.00</span></div>`;
+            }
+            document.getElementById('leaderboardList').innerHTML = listHTML;
+        }
+        loadLeaderboard();
+
+        // Open respective task form inside the page
+        function openTaskForm(type) {
+            const container = document.getElementById('taskFormContainer');
+            const title = document.getElementById('formTitle');
+            const fields = document.getElementById('formFields');
+            container.style.display = 'block';
+
+            if(type === 'gmail') {
+                title.innerText = 'জিমেইল টাস্ক সাবমিট ফরম';
+                fields.innerHTML = `<input type="email" placeholder="Gmail Username"><input type="password" placeholder="Password">`;
+            } else if(type === 'facebook') {
+                title.innerText = 'ফেসবুক টাস্ক সাবমিট ফরম';
+                fields.innerHTML = `<input type="text" placeholder="Facebook UID"><input type="text" placeholder="Cookies">`;
+            } else if(type === 'instagram') {
+                title.innerText = 'ইনস্টাগ্রাম টাস্ক সাবমিট ফরম';
+                fields.innerHTML = `<input type="text" placeholder="Instagram Username"><input type="text" placeholder="Cookies">`;
+            }
+        }
+
+        function submitTask() {
+            alert('আপনার টাস্ক সফলভাবে সাবমিট হয়েছে! এডমিন অ্যাপ্রুভ করলে ব্যালেন্স যোগ হবে।');
+            document.getElementById('taskFormContainer').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

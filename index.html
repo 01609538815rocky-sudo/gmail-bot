@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelancing Academy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        .orange-gradient {
+            background: linear-gradient(135deg, #f97316, #ea580c, #c2410c);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+        }
+        .card-bg {
+            background: linear-gradient(180deg, #fffbeb, #fef3c7);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans pb-24">
+
+    <!-- Header -->
+    <header class="p-3 orange-gradient text-white flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <div class="flex items-center space-x-2">
+            <span class="text-xl font-black">⚙️</span>
+            <h1 class="text-base font-extrabold tracking-wide">BD FREELANCING ACADEMY</h1>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button class="bg-white/20 p-2 rounded-full text-sm">🔔</button>
+            <button onclick="openAdminLogin()" class="bg-white/20 p-2 rounded-full text-sm">👤</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="p-4 max-w-md mx-auto space-y-4">
+
+        <!-- 1. HOME PAGE -->
+        <div id="page-home" class="space-y-4">
+            <!-- Top Banner Card -->
+            <div class="relative rounded-2xl overflow-hidden shadow-xl border border-amber-500/30">
+                <div class="bg-slate-950 p-4 text-center space-y-3">
+                    <div class="flex justify-between items-center text-xs text-amber-400 font-bold">
+                        <span class="bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40">👑 VIP</span>
+                        <span>LIMITED TIME OFFER</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-amber-300">৳12000 <span class="text-xs text-white">টাকা মাসিক বেতন</span></h2>
+                        <p class="text-xs text-slate-300">AI FREELANCING ACADEMY NG™</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                        <div class="bg-slate-900 p-2 rounded-xl border border-slate-800 text-amber-400">⚡ প্রতিদিন ইনকাম</div>
+                        <div class="bg-slate-900 p-2 rounded-xl border border-slate-800 text-emerald-400">💵 প্রতিদিন পেমেন্ট</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="bg-slate-950 border border-amber-500/30 p-4 rounded-2xl flex justify-between items-center shadow-lg">
+                <div>
+                    <p class="text-xs text-slate-400">Current Balance</p>
+                    <h3 id="user-balance" class="text-2xl font-extrabold text-amber-400">৳0.00</h3>
+                </div>
+                <button onclick="switchTab('withdraw')" class="orange-gradient text-white font-bold px-4 py-2.5 rounded-xl text-sm shadow">Withdraw Funds</button>
+            </div>
+
+            <!-- Referral Leaderboard Section -->
+            <div class="card-bg text-slate-900 p-4 rounded-2xl shadow-md space-y-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl">🏆</span>
+                    <h3 class="font-extrabold text-sm">সেরা ১০ রেফারেল তালিকা</h3>
+                </div>
+                <div class="bg-white/80 p-3 rounded-xl border border-amber-200 text-xs text-slate-700 leading-relaxed">
+                    অভিনন্দন! এই তালিকার সেরা রেফারারদের বিশেষ পুরষ্কারে পুর상কৃত করা হবে। তাই আপনিও এই তালিকায় থাকতে চাইলে বেশি বেশি রেফার করুন!
+                </div>
+                <!-- Rank 1 Card -->
+                <div class="bg-slate-900 text-white p-3 rounded-xl flex justify-between items-center border border-amber-500/40">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded">RANK #1</span>
+                        <span class="font-bold text-xs">ASHIK [NG]™...</span>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-slate-400">VERIFIED REFER</p>
+                        <p class="text-sm font-black text-amber-400">16</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Links Section -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-amber-400">অফিশিয়াল চ্যানেল এবং সাপোর্ট লিংক</h3>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded animate-pulse">● Live</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2 pt-1">
+                    <a href="https://facebook.com" target="_blank" class="bg-slate-900 p-3 rounded-xl flex justify-center items-center border border-slate-800 text-xl">📘</a>
+                    <a href="https://telegram.org" target="_blank" class="bg-slate-900 p-3 rounded-xl flex justify-center items-center border border-slate-800 text-xl">✈️</a>
+                    <a href="https://youtube.com" target="_blank" class="bg-slate-900 p-3 rounded-xl flex justify-center items-center border border-slate-800 text-xl">▶️</a>
+                    <a href="https://whatsapp.com" target="_blank" class="bg-slate-900 p-3 rounded-xl flex justify-center items-center border border-slate-800 text-xl">🟢</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. TASKS PAGE -->
+        <div id="page-tasks" class="space-y-3 hidden">
+            <h2 class="text-lg font-bold text-amber-400 mb-2">Available Tasks</h2>
+            
+            <!-- Gmail Task -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-sm" id="label-gmail-title">Gmail Task (৳10)</span>
+                    </div>
+                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">Active</span>
+                </div>
+                <input type="text" id="gmail-user" placeholder="Full Name / Email" class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-xs text-slate-100">
+                <input type="password" id="gmail-pass" placeholder="Password" class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-xs text-slate-100">
+                <button onclick="submitTask('Gmail')" class="w-full orange-gradient text-white font-bold py-2 rounded-lg text-xs shadow">Submit Task</button>
+            </div>
+
+            <!-- Facebook Task -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-sm" id="label-fb-title">Facebook Task (৳5)</span>
+                    </div>
+                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">Active</span>
+                </div>
+                <input type="text" id="fb-user" placeholder="Profile Link / Username" class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-xs text-slate-100">
+                <button onclick="submitTask('Facebook')" class="w-full orange-gradient text-white font-bold py-2 rounded-lg text-xs shadow">Submit Task</button>
+            </div>
+
+            <!-- Instagram Task -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-sm" id="label-insta-title">Instagram Task (৳5)</span>
+                    </div>
+                    <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">Active</span>
+                </div>
+                <input type="text" id="insta-user" placeholder="Username" class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-xs text-slate-100">
+                <button onclick="submitTask('Instagram')" class="w-full orange-gradient text-white font-bold py-2 rounded-lg text-xs shadow">Submit Task</button>
+            </div>
+        </div>
+
+        <!-- 3. WITHDRAW PAGE -->
+        <div id="page-withdraw" class="space-y-4 hidden">
+            <h2 class="text-lg font-bold text-amber-400">Withdraw Funds</h2>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                <label class="text-xs text-slate-400">Select Payment Method</label>
+                <div class="grid grid-cols-3 gap-2" id="payment-methods">
+                    <button type="button" onclick="selectPayment(this, 'bKash')" class="pay-btn border border-orange-500 bg-orange-500/10 p-2 rounded-xl text-xs font-bold text-center text-orange-400">bKash</button>
+                    <button type="button" onclick="selectPayment(this, 'Nagad')" class="pay-btn border border-slate-800 bg-slate-900 p-2 rounded-xl text-xs font-bold text-center text-slate-400">Nagad</button>
+                    <button type="button" onclick="selectPayment(this, 'Rocket')" class="pay-btn border border-slate-800 bg-slate-900 p-2 rounded-xl text-xs font-bold text-center text-slate-400">Rocket</button>
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400">Amount (BDT)</label>
+                    <input type="number" id="withdraw-amount" placeholder="500" class="w-full bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-sm mt-1 text-slate-100">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400">Account Number</label>
+                    <input type="text" id="withdraw-number" placeholder="017XX XXXXXX" class="w-full bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-sm mt-1 text-slate-100">
+                </div>
+                <button onclick="handleWithdraw()" class="w-full orange-gradient text-white font-bold py-3 rounded-xl text-sm shadow">Submit Request</button>
+            </div>
+        </div>
+
+        <!-- 4. NETWORK PAGE -->
+        <div id="page-network" class="space-y-4 hidden">
+            <h2 class="text-lg font-bold text-amber-400">Network & Referrals</h2>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3 text-sm">
+                <p class="text-xs text-slate-400">Share your referral link with friends and earn commission automatically!</p>
+                <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                    <span id="ref-link" class="text-amber-400 truncate">https://t.me/TaskEarnBD_Bot?start=82934389</span>
+                    <button onclick="alert('Referral Link Copied!')" class="orange-gradient px-3 py-1.5 rounded-lg text-white font-bold">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. PROFILE PAGE -->
+        <div id="page-profile" class="space-y-4 hidden">
+            <h2 class="text-lg font-bold text-amber-400">User Profile</h2>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3 text-sm">
+                <div class="flex justify-between border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Telegram Name</span>
+                    <span class="font-semibold">Shafiul Islam</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Unique User ID</span>
+                    <span class="font-semibold text-amber-400">82934389</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Registered Date</span>
+                    <span class="font-semibold">20 May 2026</span>
+                </div>
+                <button class="w-full bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold py-2.5 rounded-xl text-xs mt-4">Logout</button>
+            </div>
+        </div>
+
+        <!-- 6. ADMIN PANEL (Protected) -->
+        <div id="page-admin" class="space-y-4 hidden">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-rose-400">Admin Control Panel</h2>
+                <button onclick="switchTab('home')" class="text-xs bg-slate-800 px-3 py-1 rounded">Back</button>
+            </div>
+
+            <!-- Rate Control Section -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                <h3 class="text-xs font-bold text-amber-400 uppercase">Manage Task Rates</h3>
+                <div class="flex justify-between items-center text-xs">
+                    <span>Gmail Rate (৳):</span>
+                    <input type="number" id="rate-gmail-input" value="10" class="w-16 bg-slate-900 border border-slate-700 p-1 rounded text-center text-slate-100">
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                    <span>Facebook Rate (৳):</span>
+                    <input type="number" id="rate-fb-input" value="5" class="w-16 bg-slate-900 border border-slate-700 p-1 rounded text-center text-slate-100">
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                    <span>Instagram Rate (৳):</span>
+                    <input type="number" id="rate-insta-input" value="5" class="w-16 bg-slate-900 border border-slate-700 p-1 rounded text-center text-slate-100">
+                </div>
+                <button onclick="saveTaskRates()" class="w-full bg-emerald-600 text-white font-bold py-1.5 rounded text-xs mt-2">Save Rates</button>
+            </div>
+
+            <!-- Pending Task Submissions -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                <h3 class="text-xs font-bold text-amber-400 uppercase">Pending Task Submissions</h3>
+                <div id="admin-task-list" class="space-y-2">
+                    <p class="text-xs text-slate-500 text-center py-2">No pending tasks found.</p>
+                </div>
+            </div>
+
+            <!-- Pending Withdraw Requests -->
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                <h3 class="text-xs font-bold text-amber-400 uppercase">Pending Withdraw Requests</h3>
+                <div id="admin-withdraw-list" class="space-y-2">
+                    <p class="text-xs text-slate-500 text-center py-2">No pending withdrawals found.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (5 Items Style) -->
+    <nav class="fixed bottom-0 left-0 right-0 orange-gradient border-t border-orange-600 flex justify-around py-2 z-50 shadow-2xl">
+        <button onclick="switchTab('home')" class="text-xs text-white flex flex-col items-center space-y-1 font-bold"><span>🏠</span><span>হোম</span></button>
+        <button onclick="switchTab('tasks')" class="text-xs text-white/80 flex flex-col items-center space-y-1"><span>📋</span><span>টাস্ক</span></button>
+        <button onclick="switchTab('withdraw')" class="text-xs text-white/80 flex flex-col items-center space-y-1"><span>💳</span><span>উইথড্র</span></button>
+        <button onclick="switchTab('network')" class="text-xs text-white/80 flex flex-col items-center space-y-1"><span>👥</span><span>নেটওয়ার্ক</span></button>
+        <button onclick="switchTab('profile')" class="text-xs text-white/80 flex flex-col items-center space-y-1"><span>👤</span><span>প্রোফাইল</span></button>
+    </nav>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let userBalance = parseFloat(localStorage.getItem('taskEarn_balance')) || 0.00;
+        let pendingTasks = JSON.parse(localStorage.getItem('taskEarn_tasks')) || [];
+        let pendingWithdraws = JSON.parse(localStorage.getItem('taskEarn_withdraws')) || [];
+        let taskRates = JSON.parse(localStorage.getItem('taskEarn_rates')) || { gmail: 10, facebook: 5, instagram: 5 };
+        let selectedPaymentMethod = 'bKash';
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateBalanceUI();
+            updateTaskLabels();
+            document.getElementById('rate-gmail-input').value = taskRates.gmail;
+            document.getElementById('rate-fb-input').value = taskRates.facebook;
+            document.getElementById('rate-insta-input').value = taskRates.instagram;
+        });
+
+        function updateBalanceUI() {
+            document.getElementById('user-balance').innerText = '৳' + userBalance.toFixed(2);
+            localStorage.setItem('taskEarn_balance', userBalance);
+        }
+
+        function updateTaskLabels() {
+            document.getElementById('label-gmail-title').innerText = `Gmail Task (৳${taskRates.gmail})`;
+            document.getElementById('label-fb-title').innerText = `Facebook Task (৳${taskRates.facebook})`;
+            document.getElementById('label-insta-title').innerText = `Instagram Task (৳${taskRates.instagram})`;
+        }
+
+        function switchTab(tabId) {
+            ['home', 'tasks', 'withdraw', 'network', 'profile', 'admin'].forEach(t => {
+                let el = document.getElementById('page-' + t);
+                if(el) el.classList.add('hidden');
+            });
+            let target = document.getElementById('page-' + tabId);
+            if(target) target.classList.remove('hidden');
+
+            if(tabId === 'admin') {
+                renderAdminTasks();
+                renderAdminWithdraws();
+            }
+        }
+
+        function selectPayment(button, method) {
+            selectedPaymentMethod = method;
+            let buttons = document.querySelectorAll('.pay-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('border-orange-500', 'bg-orange-500/10', 'text-orange-400');
+                btn.classList.add('border-slate-800', 'bg-slate-900', 'text-slate-400');
+            });
+            button.classList.remove('border-slate-800', 'bg-slate-900', 'text-slate-400');
+            button.classList.add('border-orange-500', 'bg-orange-500/10', 'text-orange-400');
+        }
+
+        function openAdminLogin() {
+            let u = prompt("Enter Admin Username:");
+            let p = prompt("Enter Admin Password:");
+            if(u === "01743815478" && p === "102050") {
+                switchTab('admin');
+                alert("Admin Login Successful!");
+            } else {
+                alert("Invalid Username or Password!");
+            }
+        }
+
+        function saveTaskRates() {
+            let g = parseFloat(document.getElementById('rate-gmail-input').value);
+            let f = parseFloat(document.getElementById('rate-fb-input').value);
+            let i = parseFloat(document.getElementById('rate-insta-input').value);
+
+            if(isNaN(g) || isNaN(f) || isNaN(i)) {
+                alert("Please enter valid numbers for rates!");
+                return;
+            }
+
+            taskRates = { gmail: g, facebook: f, instagram: i };
+            localStorage.setItem('taskEarn_rates', JSON.stringify(taskRates));
+            updateTaskLabels();
+            alert("Task Rates Updated Successfully!");
+        }
+
+        function submitTask(taskType) {
+            let reward = taskType === 'Gmail' ? taskRates.gmail : (taskType === 'Facebook' ? taskRates.facebook : taskRates.instagram);
+            let details = "";
+
+            if(taskType === 'Gmail') {
+                let email = document.getElementById('gmail-user').value.trim();
+                let pass = document.getElementById('gmail-pass').value.trim();
+                if(!email || !pass) { alert("Please fill all fields!"); return; }
+                details = `Email: ${email} / Pass: ${pass}`;
+                document.getElementById('gmail-user').value = '';
+                document.getElementById('gmail-pass').value = '';
+            } else if(taskType === 'Facebook') {
+                let fb = document.getElementById('fb-user').value.trim();
+                if(!fb) { alert("Please enter profile link!"); return; }
+                details = `Profile: ${fb}`;
+                document.getElementById('fb-user').value = '';
+            } else if(taskType === 'Instagram') {
+                let ig = document.getElementById('insta-user').value.trim();
+                if(!ig) { alert("Please enter username!"); return; }
+                details = `Username: ${ig}`;
+                document.getElementById('insta-user').value = '';
+            }
+
+            let newTask = { id: Date.now(), type: taskType, reward: reward, details: details };
+            pendingTasks.push(newTask);
+            localStorage.setItem('taskEarn_tasks', JSON.stringify(pendingTasks));
+
+            alert(taskType + " Task Submitted Successfully! Pending Admin Approval.");
+        }
+
+        function handleWithdraw() {
+            let amt = parseFloat(document.getElementById('withdraw-amount').value);
+            let num = document.getElementById('withdraw-number').value.trim();
+
+            if(!amt || !num) {
+                alert("Please fill up all withdrawal fields!");
+                return;
+            }
+            if(amt > userBalance) {
+                alert("Insufficient Balance!");
+                return;
+            }
+
+            userBalance -= amt;
+            updateBalanceUI();
+
+            let newWithdraw = {
+                id: Date.now(),
+                method: selectedPaymentMethod,
+                amount: amt,
+                number: num
+            };
+            pendingWithdraws.push(newWithdraw);
+            localStorage.setItem('taskEarn_withdraws', JSON.stringify(pendingWithdraws));
+
+            alert(`--- DIGITAL WITHDRAW RECEIPT ---\nMethod: ${selectedPaymentMethod}\nAmount: ৳${amt}\nNumber: ${num}\nStatus: Pending Approval\n---------------------------------`);
+
+            document.getElementById('withdraw-amount').value = '';
+            document.getElementById('withdraw-number').value = '';
+        }
+
+        function renderAdminTasks() {
+            let container = document.getElementById('admin-task-list');
+            container.innerHTML = '';
+            
+            if(pendingTasks.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-500 text-center py-2">No pending tasks found.</p>';
+                return;
+            }
+
+            pendingTasks.forEach((task, index) => {
+                let div = document.createElement('div');
+                div.className = "bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs space-y-1";
+                div.innerHTML = `
+                    <p><b>Task:</b> ${task.type} (+৳${task.reward})</p>
+                    <p class="text-slate-400">Details: ${task.details}</p>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="approveTask(${index})" class="flex-1 bg-emerald-600 py-1 rounded font-bold text-white">Approve</button>
+                        <button onclick="rejectTask(${index})" class="flex-1 bg-rose-600 py-1 rounded font-bold text-white">Reject</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function approveTask(index) {
+            let task = pendingTasks[index];
+            userBalance += task.reward;
+            updateBalanceUI();
+            
+            pendingTasks.splice(index, 1);
+            localStorage.setItem('taskEarn_tasks', JSON.stringify(pendingTasks));
+            renderAdminTasks();
+            alert("Task Approved! ৳" + task.reward + " added to user balance.");
+        }
+
+        function rejectTask(index) {
+            pendingTasks.splice(index, 1);
+            localStorage.setItem('taskEarn_tasks', JSON.stringify(pendingTasks));
+            renderAdminTasks();
+            alert("Task Rejected!");
+        }
+
+        function renderAdminWithdraws() {
+            let container = document.getElementById('admin-withdraw-list');
+            container.innerHTML = '';
+            
+            if(pendingWithdraws.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-500 text-center py-2">No pending withdrawals found.</p>';
+                return;
+            }
+
+            pendingWithdraws.forEach((item, index) => {
+                let div = document.createElement('div');
+                div.className = "bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs space-y-1";
+                div.innerHTML = `
+                    <p><b>Method:</b> ${item.method} | <b>Amount:</b> ৳${item.amount}</p>
+                    <p class="text-slate-400">A/C Number: ${item.number}</p>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="approveWithdraw(${index})" class="flex-1 bg-emerald-600 py-1 rounded font-bold text-white">Approve Paid</button>
+                        <button onclick="cancelWithdraw(${index}, ${item.amount})" class="flex-1 bg-rose-600 py-1 rounded font-bold text-white">Cancel & Refund</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function approveWithdraw(index) {
+            pendingWithdraws.splice(index, 1);
+            localStorage.setItem('taskEarn_withdraws', JSON.stringify(pendingWithdraws));
+            renderAdminWithdraws();
+            alert("Withdrawal marked as Paid/Approved!");
+        }
+
+        function cancelWithdraw(index, amount) {
+            userBalance += amount;
+            updateBalanceUI();
+            pendingWithdraws.splice(index, 1);
+            localStorage.setItem('taskEarn_withdraws', JSON.stringify(pendingWithdraws));
+            renderAdminWithdraws();
+            alert("Withdrawal Cancelled and Amount Refunded to User!");
+        }
+    </script>
+</body>
+  </html>

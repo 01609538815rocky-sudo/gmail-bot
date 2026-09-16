@@ -1,0 +1,355 @@
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+// অ্যাপ ডাটা ও এডমিন তথ্য
+let appSettings = {
+    gmailRate: 13,
+    adminPhone: "01743815478",
+    adminPass: "102050"
+};
+
+let users = {};
+let tasks = [];
+
+// ১. ফ্রন্টএন্ড হোম ও ইউজার ইন্টারফেস (Single HTML Output)
+app.get('/', (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html lang="bn">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Telegram Task Mini App</title>
+        <script src="https://telegram.org/js/telegram-web-app.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 font-sans pb-16">
+        <div class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 rounded-b-3xl shadow-lg text-center">
+            <h1 class="text-2xl font-bold">🌟 Premium Task Hub</h1>
+            <p class="text-sm mt-1 opacity-90">টেলিগ্রাম মিনি অ্যাপ আয় মাধ্যম</p>
+        </div>
+
+        <div id="home-section" class="p-4">
+            <h2 class="text-lg font-semibold text-gray-700 mb-3">কাজের তালিকা</h2>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="openGmailForm()" class="bg-white p-4 rounded-xl shadow border hover:border-blue-500 flex flex-col items-center">
+                    <span class="text-3xl mb-1">📧</span>
+                    <span class="font-bold text-gray-800">Gmail Task</span>
+                    <span id="current-rate" class="text-xs text-green-600 font-semibold mt-1">লোড হচ্ছে...</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="gmail-form-section" class="p-4 hidden">
+            <button onclick="goHome()" class="text-blue-600 font-semibold mb-3">← ফিরে যান</button>
+            <div class="bg-white p-5 rounded-xl shadow">
+                <h3 class="text-xl font-bold mb-4 text-gray-800">Gmail Task Submit</h3>
+                <form onsubmit="submitGmailTask(event)">
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">জিমেইল নাম বা ইমেইল</label>
+                        <input type="text" id="gmailName" required class="w-full p-3 border rounded-lg" placeholder="example@gmail.com">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড</label>
+                        <input type="password" id="password" required class="w-full p-3 border rounded-lg" placeholder="********">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold">সাবমিট করুন</button>
+                </form>
+                <p id="form-msg" class="text-center text-sm mt-3"></p>
+            </div>
+        </div>
+
+        <div id="balance-section" class="p-4 hidden">
+            <div class="bg-white p-6 rounded-xl shadow text-center">
+                <h3 class="text-gray-500 text-sm">আপনার ব্যালেন্স</h3>
+                <p class="text-3xl font-bold text-green-600 mt-2"><span id="user-balance">0</span> BDT</p>
+            </div>
+        </div>
+
+        <div id="withdraw-section" class="p-4 hidden">
+            <div class="bg-white p-5 rounded-xl shadow">
+                <h3 class="text-xl font-bold mb-3 text-gray-800">টাকা উত্তোলন (Withdraw)</h3>
+                <form onsubmit="submitWithdraw(event)">
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">মেথড</label>
+                        <select id="payMethod" class="w-full p-3 border rounded-lg">
+                            <option value="bKash">বিকাশ</option>
+                            <option value="Nagad">নগদ</option>
+                            <option value="Rocket">রকেট</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">পরিমাণ (সর্বনিম্ন ৫০ টাকা)</label>
+                        <input type="number" id="withdrawAmount" required min="50" class="w-full p-3 border rounded-lg" placeholder="৫০">
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold">উইথড্র রিকোয়েস্ট</button>
+                </form>
+                <p id="withdraw-msg" class="text-center text-sm mt-3"></p>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 shadow-lg">
+            <button onclick="switchTab('home')" class="text-blue-600 font-semibold text-sm">🏠 হোম</button>
+            <button onclick="switchTab('balance')" class="text-gray-600 font-semibold text-sm">💰 ব্যালেন্স</button>
+            <button onclick="switchTab('withdraw')" class="text-gray-600 font-semibold text-sm">💸 উইথড্র</button>
+        </div>
+
+        <script>
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            const userId = tg.initDataUnsafe?.user?.id || "user_" + Math.floor(Math.random() * 100000);
+
+            fetch('/api/settings').then(res => res.json()).then(data => {
+                document.getElementById('current-rate').innerText = 'রেট: ' + data.gmailRate + ' টাকা';
+            });
+
+            function switchTab(tab) {
+                document.getElementById('home-section').classList.add('hidden');
+                document.getElementById('gmail-form-section').classList.add('hidden');
+                document.getElementById('balance-section').classList.add('hidden');
+                document.getElementById('withdraw-section').classList.add('hidden');
+
+                if (tab === 'home') document.getElementById('home-section').classList.remove('hidden');
+                if (tab === 'balance') {
+                    fetch('/api/user/' + userId).then(res => res.json()).then(d => {
+                        document.getElementById('user-balance').innerText = d.balance;
+                    });
+                    document.getElementById('balance-section').classList.remove('hidden');
+                }
+                if (tab === 'withdraw') document.getElementById('withdraw-section').classList.remove('hidden');
+            }
+
+            function openGmailForm() {
+                document.getElementById('home-section').classList.add('hidden');
+                document.getElementById('gmail-form-section').classList.remove('hidden');
+            }
+            function goHome() {
+                document.getElementById('gmail-form-section').classList.add('hidden');
+                document.getElementById('home-section').classList.remove('hidden');
+            }
+
+            function submitGmailTask(e) {
+                e.preventDefault();
+                const gmailName = document.getElementById('gmailName').value;
+                const password = document.getElementById('password').value;
+
+                fetch('/api/submit-task', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, gmailName, password })
+                }).then(res => res.json()).then(data => {
+                    document.getElementById('form-msg').innerText = data.message;
+                    document.getElementById('gmailForm').reset();
+                });
+            }
+
+            function submitWithdraw(e) {
+                e.preventDefault();
+                const method = document.getElementById('payMethod').value;
+                const amount = document.getElementById('withdrawAmount').value;
+
+                fetch('/api/withdraw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, method, amount })
+                }).then(res => res.json()).then(data => {
+                    document.getElementById('withdraw-msg').innerText = data.message;
+                });
+            }
+        </script>
+    </body>
+    </html>
+    `);
+});
+
+// ২. এডমিন প্যানেল রুট (/admin)
+app.get('/admin', (req, res) => {
+    res.send(`
+    <!DOCTYPE html>
+    <html lang="bn">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Panel</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 p-6 font-sans">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">⚙️ Admin Panel</h1>
+
+            <div id="login-box" class="bg-white p-6 rounded-xl shadow max-w-md mx-auto">
+                <h2 class="text-xl font-bold mb-4 text-center">লগইন করুন</h2>
+                <form onsubmit="adminLogin(event)">
+                    <input type="text" id="adminPhone" required class="w-full p-3 border rounded-lg mb-3" placeholder="নম্বর: 01743815478">
+                    <input type="password" id="adminPass" required class="w-full p-3 border rounded-lg mb-4" placeholder="পাসওয়ার্ড: 102050">
+                    <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold">লগইন</button>
+                </form>
+                <p id="login-msg" class="text-center text-sm mt-3 text-red-600"></p>
+            </div>
+
+            <div id="admin-dashboard" class="hidden space-y-6">
+                <div class="bg-white p-5 rounded-xl shadow">
+                    <h2 class="text-lg font-bold mb-3">রেট পরিবর্তন করুন</h2>
+                    <div class="flex gap-3">
+                        <input type="number" id="newRate" class="p-2 border rounded-lg w-1/3">
+                        <button onclick="updateRate()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">আপডেট</button>
+                    </div>
+                    <p id="rate-msg" class="text-sm mt-2 text-green-600"></p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow">
+                    <h2 class="text-lg font-bold mb-3">পেন্ডিং টাস্ক লিস্ট</h2>
+                    <div id="tasks-list" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let sPhone = "", sPass = "";
+            function adminLogin(e) {
+                e.preventDefault();
+                sPhone = document.getElementById('adminPhone').value;
+                sPass = document.getElementById('adminPass').value;
+
+                fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: sPhone, password: sPass })
+                }).then(res => res.json()).then(data => {
+                    if (data.success) {
+                        document.getElementById('login-box').classList.add('hidden');
+                        document.getElementById('admin-dashboard').classList.remove('hidden');
+                        loadData();
+                    } else {
+                        document.getElementById('login-msg').innerText = "ভুল নম্বর বা পাসওয়ার্ড!";
+                    }
+                });
+            }
+
+            function loadData() {
+                fetch('/api/settings').then(res => res.json()).then(d => {
+                    document.getElementById('newRate').value = d.gmailRate;
+                });
+                loadTasks();
+            }
+
+            function updateRate() {
+                const rate = document.getElementById('newRate').value;
+                fetch('/api/admin/update-rate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rate, phone: sPhone, password: sPass })
+                }).then(res => res.json()).then(d => {
+                    document.getElementById('rate-msg').innerText = d.message;
+                });
+            }
+
+            function loadTasks() {
+                fetch('/api/admin/tasks').then(res => res.json()).then(tasks => {
+                    const box = document.getElementById('tasks-list');
+                    box.innerHTML = "";
+                    const pending = tasks.filter(t => t.status === 'Pending');
+                    if (pending.length === 0) {
+                        box.innerHTML = "<p class='text-gray-500'>কোনো পেন্ডিং টাস্ক নেই।</p>";
+                        return;
+                    }
+                    pending.forEach(t => {
+                        box.innerHTML += \`<div class="p-4 border rounded flex justify-between items-center bg-gray-50">
+                            <div>
+                                <p><b>Gmail:</b> \${t.gmailName}</p>
+                                <p><b>Pass:</b> \${t.password}</p>
+                                <p class="text-xs text-blue-600">Rate: \${t.rate} BDT</p>
+                            </div>
+                            <div>
+                                <button onclick="action(\${t.id}, 'approve')" class="bg-green-600 text-white px-3 py-1 rounded">Approve</button>
+                                <button onclick="action(\${t.id}, 'reject')" class="bg-red-600 text-white px-3 py-1 rounded">Reject</button>
+                            </div>
+                        </div>\`;
+                    });
+                });
+            }
+
+            function action(id, act) {
+                fetch('/api/admin/task-action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ taskId: id, action: act, phone: sPhone, password: sPass })
+                }).then(res => res.json()).then(d => {
+                    alert(d.message);
+                    loadTasks();
+                });
+            }
+        </script>
+    </body>
+    </html>
+    `);
+});
+
+// API Endpoints
+app.get('/api/settings', (req, res) => res.json({ gmailRate: appSettings.gmailRate }));
+
+app.post('/api/admin/login', (req, res) => {
+    const { phone, password } = req.body;
+    if (phone === appSettings.adminPhone && password === appSettings.adminPass) {
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false });
+    }
+});
+
+app.post('/api/admin/update-rate', (req, res) => {
+    const { rate, phone, password } = req.body;
+    if (phone === appSettings.adminPhone && password === appSettings.adminPass) {
+        appSettings.gmailRate = parseFloat(rate);
+        res.json({ success: true, message: "রেট আপডেট হয়েছে!" });
+    } else {
+        res.status(401).json({ success: false, message: "অনুমোদিত নয়" });
+    }
+});
+
+app.get('/api/user/:id', (req, res) => {
+    if (!users[req.params.id]) users[req.params.id] = { balance: 0 };
+    res.json(users[req.params.id]);
+});
+
+app.post('/api/submit-task', (req, res) => {
+    const { userId, gmailName, password } = req.body;
+    tasks.push({ id: Date.now(), userId, gmailName, password, rate: appSettings.gmailRate, status: 'Pending' });
+    res.json({ success: true, message: "টাস্ক সফলভাবে জমা হয়েছে!" });
+});
+
+app.get('/api/admin/tasks', (req, res) => res.json(tasks));
+
+app.post('/api/admin/task-action', (req, res) => {
+    const { taskId, action, phone, password } = req.body;
+    if (phone !== appSettings.adminPhone || password !== appSettings.adminPass) return res.status(401).json({ message: "Unauthorized" });
+
+    const t = tasks.find(x => x.id == taskId);
+    if (t && action === 'approve') {
+        t.status = 'Approved';
+        if (!users[t.userId]) users[t.userId] = { balance: 0 };
+        users[t.userId].balance += t.rate;
+        res.json({ success: true, message: "অ্যাপ্রুভ করা হয়েছে এবং ব্যালেন্স যোগ হয়েছে!" });
+    } else if (t && action === 'reject') {
+        t.status = 'Rejected';
+        res.json({ success: true, message: "রিজেক্ট করা হয়েছে!" });
+    } else {
+        res.status(400).json({ message: "ত্রুটি হয়েছে" });
+    }
+});
+
+app.post('/api/withdraw', (req, res) => {
+    const { userId, method, amount } = req.body;
+    const amt = parseFloat(amount);
+    if (!users[userId] || users[userId].balance < amt || amt < 50) {
+        return res.json({ success: false, message: "অপর্যাপ্ত ব্যালেন্স অথবা সর্বনিম্ন ৫০ টাকা দিতে হবে!" });
+    }
+    users[userId].balance -= amt;
+    res.json({ success: true, message: `${method}-এর মাধ্যমে ${amt} টাকার উইথড্র রিকোয়েস্ট সফল!` });
+});
+
+app.listen(3000, () => console.log('App running on http://localhost:3000'));

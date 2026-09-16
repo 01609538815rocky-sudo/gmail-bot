@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মিনি অ্যাপ ড্যাশবোর্ড</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 850px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .screen {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .link-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .link-text span {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            height: 70px;
+            background: #0f172a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            flex: 1;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item div {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        /* Dashboard Cards */
+        .balance-card {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .balance-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .balance-card h1 {
+            font-size: 28px;
+            margin-top: 5px;
+        }
+
+        .task-category-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-category-card:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Profile Styles */
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* Receipt / History Box */
+        .receipt-box {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- ১. লগইন স্ক্রিন -->
+    <div id="loginScreen" class="screen active">
+        <h2 style="text-align: center; border: none;">লগইন করুন</h2>
+        <div class="form-group" style="margin-top: 30px;">
+            <label>ইমেইল বা ফোন নম্বর</label>
+            <input type="text" id="loginEmail" placeholder="আপনার ইমেইল বা ফোন দিন">
+        </div>
+        <div class="form-group">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন">
+        </div>
+        <button class="btn" onclick="handleLogin()">লগইন</button>
+        <div class="link-text" onclick="switchScreen('registerScreen')">অ্যাকাউন্ট নেই? <span>রেজিস্ট্রেশন করুন</span></div>
+    </div>
+
+    <!-- ২. রেজিস্ট্রেশন স্ক্রিন -->
+    <div id="registerScreen" class="screen">
+        <h2 style="text-align: center; border: none;">রেজিস্ট্রেশন করুন</h2>
+        <div class="form-group" style="margin-top: 20px;">
+            <label>আপনার নাম</label>
+            <input type="text" id="regName" placeholder="পূর্ণ নাম লিখুন">
+        </div>
+        <div class="form-group">
+            <label>ইমেইল বা ফোন নম্বর</label>
+            <input type="text" id="regEmail" placeholder="ইমেইল বা ফোন দিন">
+        </div>
+        <div class="form-group">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="regPassword" placeholder="শক্তিশালী পাসওয়ার্ড দিন">
+        </div>
+        <button class="btn" onclick="handleRegister()">রেজিস্ট্রেশন সম্পন্ন করুন</button>
+        <div class="link-text" onclick="switchScreen('loginScreen')">ইতিমধ্যে অ্যাকাউন্ট আছে? <span>লগইন করুন</span></div>
+    </div>
+
+    <!-- ৩. হোম স্ক্রিন -->
+    <div id="homeScreen" class="screen">
+        <h2>হোম ড্যাশবোর্ড</h2>
+        <div class="balance-card">
+            <h3>মূল ব্যালেন্স</h3>
+            <h1 id="userBalance">৳ 0.00</h1>
+        </div>
+        <p style="color: var(--text-muted); margin-bottom: 10px;">জনপ্রিয় সার্ভিসসমূহ:</p>
+        <div class="task-category-card" onclick="openTask('gmail')">
+            <span>📧 জিমেইল সেল (Gmail Sell)</span>
+            <span>➔</span>
+        </div>
+        <div class="task-category-card" onclick="openTask('facebook')">
+            <span>📘 ফেসবুক সেল (Facebook Sell)</span>
+            <span>➔</span>
+        </div>
+        <div class="task-category-card" onclick="openTask('instagram')">
+            <span>📸 ইনস্টাগ্রাম সেল (Instagram Sell)</span>
+            <span>➔</span>
+        </div>
+    </div>
+
+    <!-- ৪. টেক্সট অপশন / টাস্ক সাবমিট স্ক্রিন -->
+    <div id="taskScreen" class="screen">
+        <h2 id="taskTitle">টাস্ক সাবমিট</h2>
+        <div class="form-group">
+            <label>অ্যাকাউন্ট নাম / ইউজারনেম</label>
+            <input type="text" id="taskAccName" placeholder="নাম বা ইউজারনেম লিখুন">
+        </div>
+        <div class="form-group">
+            <label>অ্যাকাউন্ট পাসওয়ার্ড</label>
+            <input type="text" id="taskAccPass" placeholder="পাসওয়ার্ড দিন">
+        </div>
+        <button class="btn" onclick="submitTask()">সাবমিট করুন</button>
+        <div class="link-text" onclick="switchScreen('homeScreen')" style="color: var(--primary-color);">← হোম পেজে ফিরে যান</div>
+    </div>
+
+    <!-- ৫. উইথড্র স্ক্রিন -->
+    <div id="withdrawScreen" class="screen">
+        <h2>টাকা উত্তোলন (Withdraw)</h2>
+        <div class="form-group">
+            <label>পেমেন্ট মেথড সিলেক্ট করুন</label>
+            <select id="withdrawMethod">
+                <option value="bKash">বিকাশ (bKash)</option>
+                <option value="Nagad">নগদ (Nagad)</option>
+                <option value="Rocket">রকেট (Rocket)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>টাকার পরিমাণ (টাকা)</label>
+            <input type="number" id="withdrawAmount" placeholder="পরিমাণ লিখুন">
+        </div>
+        <div class="form-group">
+            <label>অ্যাকাউন্ট নম্বর</label>
+            <input type="text" id="withdrawNumber" placeholder="আপনার পার্সোনাল নম্বর দিন">
+        </div>
+        <button class="btn" onclick="submitWithdraw()">উত্তোলন রিকোয়েস্ট পাঠান</button>
+
+        <div id="receiptArea" style="display: none;" class="receipt-box">
+            <h4 style="color: var(--success); margin-bottom: 5px;">✅ রসিদ (Receipt)</h4>
+            <p id="receiptDetails"></p>
+        </div>
+    </div>
+
+    <!-- ৬. প্রোফাইল স্ক্রিন -->
+    <div id="profileScreen" class="screen">
+        <h2>প্রোফাইল সেটিংস</h2>
+        <div class="profile-pic-container">
+            <img id="profileImgPreview" src="https://via.placeholder.com/100" class="profile-img" alt="Profile">
+            <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)" style="display: none;">
+            <br>
+            <button class="btn" style="width: auto; padding: 6px 15px; font-size: 13px;" onclick="document.getElementById('imageUpload').click()">ছবি পরিবর্তন করুন</button>
+        </div>
+        <div class="form-group">
+            <label>নাম</label>
+            <input type="text" id="profileName" disabled>
+        </div>
+        <div class="form-group">
+            <label>ইমেইল / ফোন</label>
+            <input type="text" id="profileEmail" disabled>
+        </div>
+        <button class="btn" style="background-color: var(--danger); margin-top: 15px;" onclick="logout()">লগআউট</button>
+    </div>
+
+    <!-- বটম নেভিগেশন বার -->
+    <div class="bottom-nav" id="bottomNav" style="display: none;">
+        <div class="nav-item active" onclick="switchScreen('homeScreen', this)">
+            <div>🏠</div>হোম
+        </div>
+        <div class="nav-item" onclick="switchScreen('withdrawScreen', this)">
+            <div>💳</div>উইথড্র
+        </div>
+        <div class="nav-item" onclick="switchScreen('profileScreen', this)">
+            <div>👤</div>প্রোফাইল
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentUser = null;
+    let currentTaskType = '';
+
+    // স্ক্রিন পরিবর্তন ফাংশন
+    function switchScreen(screenId, navElement = null) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+
+        if (navElement) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            navElement.classList.add('active');
+        }
+    }
+
+    // রেজিস্ট্রেশন হ্যান্ডলর (একবার রেজিস্ট্রেশন চেক)
+    function handleRegister() {
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPassword').value;
+
+        if(!name || !email || !password) {
+            alert('সব ঘর পূরণ করুন!');
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('miniapp_users')) || [];
+        
+        // চেক করা ইউজার আগে আছে কি না
+        let existing = users.find(u => u.email === email);
+        if(existing) {
+            alert('এই ইমেইল দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা হয়েছে! দয়া করে লগইন করুন।');
+            switchScreen('loginScreen');
+            return;
+        }
+
+        users.push({ name, email, password, balance: 100, pic: 'https://via.placeholder.com/100' });
+        localStorage.setItem('miniapp_users', JSON.stringify(users));
+        alert('রেজিস্ট্রেশন সফল হয়েছে! এখন লগইন করুন।');
+        switchScreen('loginScreen');
+    }
+
+    // লগইন হ্যান্ডলর
+    function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        let users = JSON.parse(localStorage.getItem('miniapp_users')) || [];
+        let user = users.find(u => u.email === email && u.password === password);
+
+        if(user) {
+            currentUser = user;
+            document.getElementById('userBalance').innerText = `৳ ${user.balance}.00`;
+            document.getElementById('profileName').value = user.name;
+            document.getElementById('profileEmail').value = user.email;
+            if(user.pic) document.getElementById('profileImgPreview').src = user.pic;
+
+            document.getElementById('bottomNav').style.display = 'flex';
+            switchScreen('homeScreen');
+        } else {
+            alert('ভুল ইমেইল বা পাসওয়ার্ড!');
+        }
+    }
+
+    // টাস্ক পেজ ওপেন করা
+    function openTask(type) {
+        currentTaskType = type;
+        document.getElementById('taskTitle').innerText = `${type.toUpperCase()} টাস্ক সাবমিট`;
+        switchScreen('taskScreen');
+    }
+
+    // টাস্ক সাবমিট
+    function submitTask() {
+        const accName = document.getElementById('taskAccName').value;
+        const accPass = document.getElementById('taskAccPass').value;
+
+        if(!accName || !accPass) {
+            alert('সব তথ্য সঠিকভাবে দিন!');
+            return;
+        }
+
+        alert('আপনার টাস্ক সফলভাবে সাবমিট হয়েছে! এডমিন এপ্রুভ করলে ব্যালেন্স যোগ হবে।');
+        document.getElementById('taskAccName').value = '';
+        document.getElementById('taskAccPass').value = '';
+        switchScreen('homeScreen');
+    }
+
+    // উইথড্র সাবমিট ও রসিদ তৈরি
+    function submitWithdraw() {
+        const method = document.getElementById('withdrawMethod').value;
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const number = document.getElementById('withdrawNumber').value;
+
+        if(!amount || !number) {
+            alert('পরিমাণ এবং নম্বর দিন!');
+            return;
+        }
+
+        if(currentUser.balance < amount) {
+            alert('পর্যাপ্ত ব্যালেন্স নেই!');
+            return;
+        }
+
+        currentUser.balance -= amount;
+        document.getElementById('userBalance').innerText = `৳ ${currentUser.balance}.00`;
+
+        // রসিদ প্রদর্শন
+        const receiptBox = document.getElementById('receiptArea');
+        const receiptDetails = document.getElementById('receiptDetails');
+        receiptDetails.innerHTML = `মেথড: ${method}<br>টাকা: ৳${amount}<br>নম্বর: ${number}<br>স্ট্যাটাস: পেন্ডিং (Pending)<br>সময়: ${new Date().toLocaleString()}`;
+        receiptBox.style.display = 'block';
+
+        alert('উত্তোলন রিকোয়েস্ট সফলভাবে পাঠানো হয়েছে!');
+    }
+
+    // প্রোফাইল ছবি প্রিভিউ ও সেভ
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('profileImgPreview');
+            output.src = reader.result;
+            currentUser.pic = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // লগআউট
+    function logout() {
+        currentUser = null;
+        document.getElementById('bottomNav').style.display = 'none';
+        switchScreen('loginScreen');
+    }
+</script>
+
+</body>
+          </html>

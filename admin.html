@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - High Security</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #1e293b; color: #f8fafc; padding: 20px; min-height: 100vh; }
+        
+        .login-box { max-width: 350px; background: #0f172a; margin: 80px auto; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; border: 1px solid #334155; }
+        .login-box h2 { color: #f8fafc; margin-bottom: 20px; font-size: 20px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; background: #1e293b; border: 1px solid #475569; color: white; border-radius: 6px; font-size: 14px; }
+        .btn-login { background: #ff7700; color: white; border: none; width: 100%; padding: 11px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        .admin-dashboard { display: none; max-width: 700px; margin: 0 auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; background: #0f172a; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #334155; }
+        .admin-header h2 { font-size: 18px; color: #ff7700; }
+        .btn-logout { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+
+        .section-title { font-size: 16px; margin: 20px 0 10px 0; color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 5px; }
+        .card-list { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; font-size: 13px; }
+        .item-row:last-child { border-bottom: none; }
+        
+        .btn-action { padding: 5px 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px; margin-left: 5px; }
+        .btn-approve { background: #22c55e; color: white; }
+        .btn-reject { background: #ef4444; color: white; }
+        .btn-copy { background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Login Section -->
+    <div class="login-box" id="loginSection">
+        <h2>🔒 Admin Panel Login</h2>
+        <form onsubmit="adminLogin(event)">
+            <div class="form-group">
+                <label>Admin User ID (Phone)</label>
+                <input type="text" id="adminUser" required placeholder="ইউজার আইডি দিন">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPass" required placeholder="পাসওয়ার্ড দিন">
+            </div>
+            <button type="submit" class="btn-login">লগইন করুন</button>
+        </form>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div class="admin-dashboard" id="dashboardSection">
+        <div class="admin-header">
+            <h2>ড্যাশবোর্ড - অ্যাডমিন প্যানেল</h2>
+            <button class="btn-logout" onclick="adminLogout()">লগআউট</button>
+        </div>
+
+        <div class="section-title">📥 ইউজার টাস্ক সাবমিশন (Gmail Task)</div>
+        <div class="card-list" id="taskList">
+            <p style="color: #94a3b8; font-size: 13px;">কোনো নতুন টাস্ক নেই।</p>
+        </div>
+
+        <div class="section-title">💸 উইথড্র রিকোয়েস্ট লিস্ট</div>
+        <div class="card-list" id="withdrawList">
+            <p style="color: #94a3b8; font-size: 13px;">কোনো উইথড্র রিকোয়েস্ট নেই।</p>
+        </div>
+    </div>
+
+    <script>
+        function adminLogin(e) {
+            e.preventDefault();
+            let user = document.getElementById('adminUser').value;
+            let pass = document.getElementById('adminPass').value;
+
+            // হাই সিকিউরিটি ইউজারনেম ও পাসওয়ার্ড চেক
+            if(user === '01743815478' && pass === '102050') {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('dashboardSection').style.display = 'block';
+                loadAdminData();
+            } else {
+                alert('ভুল ইউজারনেম বা পাসওয়ার্ড!');
+            }
+        }
+
+        function adminLogout() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboardSection').style.display = 'none';
+        }
+
+        function loadAdminData() {
+            // Task List Load
+            let tasks = JSON.parse(localStorage.getItem('adminTasks') || '[]');
+            let taskContainer = document.getElementById('taskList');
+            if(tasks.length > 0) {
+                taskContainer.innerHTML = '';
+                tasks.forEach((t, index) => {
+                    taskContainer.innerHTML += `
+                        <div class="item-row">
+                            <div><strong>${t.type}</strong><br><span style="color:#94a3b8">${t.details}</span></div>
+                            <div>
+                                <button class="btn-action btn-copy" onclick="copyText('${t.details}')">কপি</button>
+                                <button class="btn-action btn-approve" onclick="removeTask(${index})">এপ্রুভ</button>
+                                <button class="btn-action btn-reject" onclick="removeTask(${index})">রিজেক্ট</button>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // Withdraw List Load
+            let withdraws = JSON.parse(localStorage.getItem('adminWithdraws') || '[]');
+            let withdrawContainer = document.getElementById('withdrawList');
+            if(withdraws.length > 0) {
+                withdrawContainer.innerHTML = '';
+                withdraws.forEach((w, index) => {
+                    withdrawContainer.innerHTML += `
+                        <div class="item-row">
+                            <div><strong>${w.method}</strong> - ${w.number}<br><span style="color:#38bdf8">Amount: ${w.amount} TK</span></div>
+                            <div>
+                                <button class="btn-action btn-copy" onclick="copyText('${w.number} - ${w.amount}TK')">কপি</button>
+                                <button class="btn-action btn-approve" onclick="approveWithdraw(${index})">এপ্রুভ</button>
+                                <button class="btn-action btn-reject" onclick="rejectWithdraw(${index})">রিজেক্ট</button>
+                            </div>
+                        </div>`;
+                });
+            }
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            alert('সফলভাবে কপি করা হয়েছে: ' + text);
+        }
+
+        function removeTask(index) {
+            let tasks = JSON.parse(localStorage.getItem('adminTasks') || '[]');
+            tasks.splice(index, 1);
+            localStorage.setItem('adminTasks', JSON.stringify(tasks));
+            loadAdminData();
+            alert('টাস্ক প্রসেস করা হয়েছে!');
+        }
+
+        function approveWithdraw(index) {
+            let withdraws = JSON.parse(localStorage.getItem('adminWithdraws') || '[]');
+            withdraws.splice(index, 1);
+            localStorage.setItem('adminWithdraws', JSON.stringify(withdraws));
+            localStorage.setItem('userBalance', '0'); // ব্যালেন্স অটো ক্লিয়ার
+            loadAdminData();
+            alert('উইথড্র সফলভাবে এপ্রুভ করা হয়েছে এবং ব্যালেন্স ক্লিয়ার করা হয়েছে!');
+        }
+
+        function rejectWithdraw(index) {
+            let withdraws = JSON.parse(localStorage.getItem('adminWithdraws') || '[]');
+            withdraws.splice(index, 1);
+            localStorage.setItem('adminWithdraws', JSON.stringify(withdraws));
+            loadAdminData();
+            alert('উইথড্র রিকোয়েস্ট রিজেক্ট করা হয়েছে!');
+        }
+    </script>
+</body>
+</html>

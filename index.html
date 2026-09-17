@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelancing Academy</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; padding-bottom: 90px; min-height: 100vh; }
+        
+        /* Header */
+        .header { background-color: #ff7700; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .header h1 { font-size: 14px; font-weight: bold; }
+        .header-icons { display: flex; gap: 12px; align-items: center; }
+        
+        /* Admin Button with Text */
+        .admin-link-btn { background: rgba(255,255,255,0.25); padding: 5px 10px; border-radius: 6px; font-size: 12px; color: white; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: bold; }
+        
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+
+        /* Referral Box */
+        .ref-box { background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
+        .ref-box h3 { color: #ff7700; margin-bottom: 5px; font-size: 16px; }
+        .ref-box p { font-size: 13px; color: #666; margin-bottom: 12px; }
+        .ref-link-area { display: flex; gap: 8px; }
+        .ref-link-area input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; background: #f9f9f9; color: #555; }
+        .ref-link-area button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+
+        /* Projects Section */
+        .projects-title { font-size: 15px; font-weight: bold; color: #333; margin-bottom: 12px; border-left: 4px solid #ff7700; padding-left: 8px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .project-card { background: white; padding: 15px 10px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; border: 1px solid #eee; }
+        .project-card:hover { transform: translateY(-2px); border-color: #ff7700; }
+        .project-card span { font-size: 22px; display: block; margin-bottom: 5px; }
+        .project-card h4 { font-size: 11px; color: #333; font-weight: bold; }
+
+        /* Modal / Popups */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position: relative; }
+        .modal-content h3 { color: #ff7700; margin-bottom: 15px; font-size: 18px; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; color: #888; }
+        
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 13px; }
+        .btn-submit { background: #ff7700; color: white; border: none; width: 100%; padding: 11px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #ff7700; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -3px 10px rgba(0,0,0,0.15); border-top-left-radius: 15px; border-top-right-radius: 15px; z-index: 1000; }
+        .nav-item { color: white; text-decoration: none; text-align: center; font-size: 12px; display: flex; flex-direction: column; align-items: center; }
+        .nav-item span.icon { font-size: 18px; margin-bottom: 2px; }
+        .nav-item.active { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Admin Button & Label -->
+    <div class="header">
+        <h1>BD FREELANCING ACADEMY</h1>
+        <div class="header-icons">
+            <a href="admin.html" class="admin-link-btn">
+                <span>⚙️</span> এডমিন
+            </a>
+        </div>
+    </div>
+
+    <!-- Registration Modal (First Time Check) -->
+    <div class="modal" id="regModal" style="display: flex;">
+        <div class="modal-content" style="text-align: left;">
+            <h3 style="text-align: center;">ইউজার রেজিস্ট্রেশন 📝</h3>
+            <form onsubmit="saveRegistration(event)">
+                <div class="form-group">
+                    <label>আপনার নাম</label>
+                    <input type="text" id="rName" placeholder="পুরو নাম লিখুন" required>
+                </div>
+                <div class="form-group">
+                    <label>মোবাইল নাম্বার</label>
+                    <input type="text" id="rPhone" placeholder="আপনার বিকাশ/নগদ নাম্বার" required>
+                </div>
+                <div class="form-group">
+                    <label>জিমেইল এড্রেস</label>
+                    <input type="email" id="rEmail" placeholder="example@gmail.com" required>
+                </div>
+                <button type="submit" class="btn-submit">রেজিস্ট্রেশন সম্পন্ন করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Official Notice Modal -->
+    <div class="modal" id="noticeModal">
+        <div class="modal-content">
+            <h3>অফিসিয়াল নোটিশ 🕹️</h3>
+            <p style="font-size: 13px; color: #555; text-align: left; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 15px; line-height: 1.5;">
+                🌼 ইনকাম করতে চান? কাজ আমরাই দিবো ✅ ২২ টি প্রজেক্টে কাজ করার সুযোগ। এখনই কাজ শুরু করুন।
+            </p>
+            <button class="btn-submit" onclick="closeNotice()" style="background: #2563eb;">Ok SIR 🥰</button>
+        </div>
+    </div>
+
+    <!-- Gmail Task Modal -->
+    <div class="modal" id="gmailModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('gmailModal')">&times;</span>
+            <h3>টাস্ক সাবমিট ফরম</h3>
+            <form onsubmit="submitTask(event, 'Gmail/Project Task')">
+                <div class="form-group">
+                    <label>আপনার নাম / একাউন্ট তথ্য</label>
+                    <input type="text" id="gName" placeholder="তথ্য লিখুন" required>
+                </div>
+                <div class="form-group">
+                    <label>পাসওয়ার্ড বা প্রমাণ</label>
+                    <input type="text" id="gPass" placeholder="পাসওয়ার্ড লিখুন" required>
+                </div>
+                <button type="submit" class="btn-submit">সাবমিট করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div class="modal" id="withdrawModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('withdrawModal')">&times;</span>
+            <h3>টাকা উইথড্র করুন</h3>
+            <form onsubmit="submitWithdraw(event)">
+                <div class="form-group">
+                    <label>পেমেন্ট মেথড</label>
+                    <select id="wMethod">
+                        <option value="Bkash">বিকাশ (Bkash)</option>
+                        <option value="Nagad">নগদ (Nagad)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>একাউন্ট নাম্বার</label>
+                    <input type="text" id="wNumber" placeholder="আপনার নাম্বার দিন" required>
+                </div>
+                <div class="form-group">
+                    <label>অ্যামাউন্ট (মিনিমাম ৫০ টাকা)</label>
+                    <input type="number" id="wAmount" placeholder="টাকার পরিমাণ লিখুন" min="50" required>
+                </div>
+                <button type="submit" class="btn-submit">উইথড্র রিকোয়েস্ট পাঠান</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Referral Box -->
+        <div class="ref-box">
+            <h3>আপনার বন্ধুকে রেফার করুন 🤝</h3>
+            <p>প্রতি রেফারে পাবেন 150 টাকা 🎉</p>
+            <div class="ref-link-area">
+                <input type="text" value="https://bdfreelancingacademy.com/ref=621672" id="refInput" readonly>
+                <button onclick="copyRef()">কপি লিংক</button>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-title">⚡ আপনার প্রজেক্টসমূহ</div>
+        <div class="projects-grid">
+            <div class="project-card" onclick="openGmailModal()">
+                <span>📧</span>
+                <h4>GMAIL TASK</h4>
+            </div>
+            <div class="project-card" onclick="openGmailModal()">
+                <span>📊</span>
+                <h4>CPA MARKETING</h4>
+            </div>
+            <div class="project-card" onclick="openGmailModal()">
+                <span>💻</span>
+                <h4>DATA ENTRY</h4>
+            </div>
+            <div class="project-card" onclick="openGmailModal()">
+                <span>📱</span>
+                <h4>MOBILE RECHARGE</h4>
+            </div>
+            <div class="project-card" onclick="openGmailModal()">
+                <span>⌨️</span>
+                <h4>TYPING JOB</h4>
+            </div>
+            <div class="project-card" onclick="openGmailModal()">
+                <span>⭐</span>
+                <h4>VIP JOB</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="icon">🏠</span>
+            <span>হোম</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="icon">💳</span>
+            <span>ওয়ালেট</span>
+        </a>
+        <a href="#" class="nav-item" onclick="openModal('withdrawModal')">
+            <span class="icon">💸</span>
+            <span>উইথড্র</span>
+        </a>
+        <a href="network.html" class="nav-item">
+            <span class="icon">👥</span>
+            <span>নেটওয়ার্ক</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="icon">👤</span>
+            <span>প্রোফাইল</span>
+        </a>
+    </div>
+
+    <script>
+        // Check if user is registered
+        window.onload = function() {
+            let isRegistered = localStorage.getItem('userRegistered');
+            if(!isRegistered) {
+                document.getElementById('regModal').style.display = 'flex';
+            } else {
+                document.getElementById('noticeModal').style.display = 'flex';
+            }
+        }
+
+        function saveRegistration(e) {
+            e.preventDefault();
+            let name = document.getElementById('rName').value;
+            let phone = document.getElementById('rPhone').value;
+            let email = document.getElementById('rEmail').value;
+
+            localStorage.setItem('regName', name);
+            localStorage.setItem('regPhone', phone);
+            localStorage.setItem('regEmail', email);
+            localStorage.setItem('userRegistered', 'true');
+
+            document.getElementById('regModal').style.display = 'none';
+            document.getElementById('noticeModal').style.display = 'flex';
+            alert('রেজিস্ট্রেশন সফল হয়েছে!');
+        }
+
+        function closeNotice() { document.getElementById('noticeModal').style.display = 'none'; }
+        function openGmailModal() { document.getElementById('gmailModal').style.display = 'flex'; }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function copyRef() {
+            var copyText = document.getElementById("refInput");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("রেফার লিংক কপি সফল হয়েছে!");
+        }
+
+        function submitTask(e, type) {
+            e.preventDefault();
+            let name = document.getElementById('gName').value;
+            let pass = document.getElementById('gPass').value;
+            
+            let tasks = JSON.parse(localStorage.getItem('adminTasks') || '[]');
+            tasks.push({ type: type, details: `Info: ${name}, Proof: ${pass}`, time: new Date().toLocaleString() });
+            localStorage.setItem('adminTasks', JSON.stringify(tasks));
+
+            alert('সফলভাবে টাস্ক সাবমিট হয়েছে! অ্যাডমিন প্যানেলে পাঠানো হয়েছে।');
+            document.getElementById('gmailModal').style.display = 'none';
+            e.target.reset();
+        }
+
+        function submitWithdraw(e) {
+            e.preventDefault();
+            let method = document.getElementById('wMethod').value;
+            let number = document.getElementById('wNumber').value;
+            let amount = document.getElementById('wAmount').value;
+
+            if(amount < 50) {
+                alert('মিনিমাম উইথড্র ৫০ টাকা হতে হবে!');
+                return;
+            }
+
+            let withdraws = JSON.parse(localStorage.getItem('adminWithdraws') || '[]');
+            withdraws.push({ method: method, number: number, amount: amount, status: 'Pending', time: new Date().toLocaleString() });
+            localStorage.setItem('adminWithdraws', JSON.stringify(withdraws));
+
+            alert('উইথড্র রিকোয়েস্ট সফলভাবে জমা হয়েছে!');
+            document.getElementById('withdrawModal').style.display = 'none';
+            e.target.reset();
+        }
+    </script>
+</body>
+  </html>

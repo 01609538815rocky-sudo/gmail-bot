@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>টাস্ক এবং ওয়ালেট সিস্টেম</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .switch-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .switch-text a {
+            color: #3498db;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .wallet-card {
+            background: linear-gradient(135deg, #6ab128, #4e9411);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .task-list {
+            list-style: none;
+        }
+        .task-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e1e1e1;
+        }
+        .task-item button {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 13px;
+            margin-top: 0;
+            background-color: #2ecc71;
+        }
+        .task-item button:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- লগইন ফর্ম -->
+        <div id="loginSection">
+            <h2>লগইন করুন</h2>
+            <div class="form-group">
+                <label>ইমেইল বা ফোন নম্বর</label>
+                <input type="text" id="loginEmail" placeholder="আপনার ইমেইল বা ফোন দিন">
+            </div>
+            <div class="form-group">
+                <label>পাসওয়ার্ড</label>
+                <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন">
+            </div>
+            <button onclick="login()">লগইন</button>
+            <div class="switch-text">
+                একাউন্ট নেই? <a onclick="showRegister()">রেজিস্ট্রেশন করুন</a>
+            </div>
+        </div>
+
+        <!-- রেজিস্ট্রেশন ফর্ম -->
+        <div id="registerSection" class="hidden">
+            <h2>একাউন্ট তৈরি করুন</h2>
+            <div class="form-group">
+                <label>নাম</label>
+                <input type="text" id="regName" placeholder="আপনার নাম দিন">
+            </div>
+            <div class="form-group">
+                <label>ইমেইল বা ফোন নম্বর</label>
+                <input type="text" id="regEmail" placeholder="ইমেইল বা ফোন দিন">
+            </div>
+            <div class="form-group">
+                <label>পাসওয়ার্ড</label>
+                <input type="password" id="regPassword" placeholder="নতুন পাসওয়ার্ড দিন">
+            </div>
+            <button onclick="register()">রেজিস্ট্রেশন</button>
+            <div class="switch-text">
+                ইতিমধ্যেই একাউন্ট আছে? <a onclick="showLogin()">লগইন করুন</a>
+            </div>
+        </div>
+
+        <!-- ড্যাশবোর্ড (টাস্ক ও ওয়ালেট) -->
+        <div id="dashboardSection" class="hidden">
+            <div class="dashboard-header">
+                <h3>স্বাগতম, <span id="userNameDisplay">ব্যবহারকারী</span></h3>
+                <button style="width: auto; padding: 5px 10px; background-color: #e74c3c;" onclick="logout()">লগআউট</button>
+            </div>
+
+            <div class="wallet-card">
+                <h4>মূল ব্যালেন্স (ওয়ালেট)</h4>
+                <h2>৳ <span id="walletBalance">0.00</span></h2>
+            </div>
+
+            <h3>দলভিত্তিক টাস্কসমূহ</h3>
+            <ul class="task-list" id="taskList" style="margin-top: 10px;">
+                <li class="task-item">
+                    <span>ইউটিউব ভিডিও দেখুন (+৳১০)</span>
+                    <button onclick="completeTask(10, this)">সম্পন্ন করুন</button>
+                </li>
+                <li class="task-item">
+                    <span>টেলিগ্রাম চ্যানেলে জয়েন করুন (+৳১৫)</span>
+                    <button onclick="completeTask(15, this)">সম্পন্ন করুন</button>
+                </li>
+                <li class="task-item">
+                    <span>অ্যাপ রিভিউ দিন (+৳২০)</span>
+                    <button onclick="completeTask(20, this)">সম্পন্ন করুন</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let balance = 0.00;
+
+        function showRegister() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('registerSection').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function register() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPassword').value;
+
+            if(name && email && pass) {
+                localStorage.setItem('savedName', name);
+                localStorage.setItem('savedEmail', email);
+                localStorage.setItem('savedPass', pass);
+                alert('রেজিস্ট্রেশন সফল হয়েছে! এখন লগইন করুন।');
+                showLogin();
+            } else {
+                alert('দয়া করে সব ঘর পূরণ করুন।');
+            }
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            const savedEmail = localStorage.getItem('savedEmail');
+            const savedPass = localStorage.getItem('savedPass');
+            const savedName = localStorage.getItem('savedName') || 'ইউজার';
+
+            if((email === savedEmail && pass === savedPass) || (email === "admin" && pass === "admin")) {
+                currentUser = savedName;
+                document.getElementById('userNameDisplay').innerText = currentUser;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+            } else {
+                alert('ভুল ইমেইল বা পাসওয়ার্ড!');
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function completeTask(amount, btnElement) {
+            balance += amount;
+            document.getElementById('walletBalance').innerText = balance.toFixed(2);
+            btnElement.innerText = "সম্পন্ন হয়েছে";
+            btnElement.style.backgroundColor = "#95a5a6";
+            btnElement.disabled = true;
+            alert('টাস্ক সম্পন্ন হয়েছে! আপনার ওয়ালেটে ৳' + amount + ' যোগ হয়েছে।');
+        }
+    </script>
+</body>
+</html>

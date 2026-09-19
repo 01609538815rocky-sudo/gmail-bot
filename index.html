@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelancing Academy</title>
+    <!-- টেলিগ্রাম মিনি অ্যাপ SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+        /* টপ হেডার */
+        .top-header {
+            background-color: #ff6600;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-header h1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .header-icons span {
+            font-size: 20px;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+        /* মেইন ব্যানার কার্ড */
+        .main-card {
+            background: linear-gradient(135deg, #ff7700, #e65c00);
+            color: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .main-card h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        .main-card p {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        .badge-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .join-btn {
+            background: white;
+            color: #ff6600;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        /* রেফার কার্ড */
+        .refer-card {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .refer-card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .refer-card p {
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .refer-box {
+            background: white;
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 5px;
+        }
+        .refer-box input {
+            border: none;
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+            outline: none;
+            color: #333;
+        }
+        .copy-btn {
+            background: #ff6600;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        /* বটম নেভিগেশন বার */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: #ff6600;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            color: white;
+            text-align: center;
+            font-size: 11px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            flex: 1;
+        }
+        .nav-item div {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+        .section {
+            display: none;
+        }
+        .active-section {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- টপ হেডার -->
+        <div class="top-header">
+            <h1>BD FREELANCING ACADEMY</h1>
+            <div class="header-icons">
+                <span>🔔</span>
+                <span>👤</span>
+            </div>
+        </div>
+
+        <!-- হোম সেকশন -->
+        <div id="homeSection" class="section active-section">
+            <div class="main-card">
+                <h2>মাসিক সেলারি ১২০০০ টাকা</h2>
+                <p>আপনার পরিশ্রম, আমাদের সম্মান</p>
+                <div class="badge-row">
+                    <span class="badge">ফ্রি ডেভেলপমেন্ট</span>
+                    <span class="badge">নিয়মিত আয়</span>
+                    <span class="badge">নিরাপদ পেমেন্ট</span>
+                </div>
+                <button class="join-btn" onclick="alert('স্বাগতম! আপনি সফলভাবে যুক্ত হয়েছেন।')">➔ এখনই জয়েন করুন</button>
+            </div>
+
+            <div class="refer-card">
+                <h3>আপনার বন্ধুকে রেফার করুন</h3>
+                <p>প্রতি রেফারে পাবেন ১৫০ টাকা!</p>
+                <div class="refer-box">
+                    <input type="text" id="referLink" value="https://bdfreelancing.com/ref=815" readonly>
+                    <button class="copy-btn" onclick="copyReferLink()">কপি</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ওয়ালেট সেকশন -->
+        <div id="walletSection" class="section">
+            <div style="padding: 20px; text-align: center;">
+                <h2>ওয়ালেট ব্যালেন্স</h2>
+                <h1 style="color: #27ae60; margin-top: 15px;">৳ 0.00</h1>
+            </div>
+        </div>
+
+        <!-- উইথড্র সেকশন -->
+        <div id="withdrawSection" class="section">
+            <div style="padding: 20px;">
+                <h2>উইথড্র করুন</h2>
+                <p style="text-align: center; margin-top: 20px; color: #666;">আপনার পর্যাপ্ত ব্যালেন্স নেই।</p>
+            </div>
+        </div>
+
+        <!-- প্রোফাইল সেকশন -->
+        <div id="profileSection" class="section">
+            <div style="padding: 20px; text-align: center;">
+                <h2>ব্যবহারকারী প্রোফাইল</h2>
+                <p style="margin-top: 15px;" id="userName">টেলিগ্রাম ইউজার</p>
+            </div>
+        </div>
+
+        <!-- বটম নেভিগেশন বার -->
+        <div class="bottom-nav">
+            <button class="nav-item" onclick="switchTab('home')">
+                <div>🏠</div>হোম
+            </button>
+            <button class="nav-item" onclick="switchTab('wallet')">
+                <div>💰</div>ওয়ালেট
+            </button>
+            <button class="nav-item" onclick="switchTab('withdraw')">
+                <div>💳</div>উইথড্র
+            </button>
+            <button class="nav-item" onclick="switchTab('profile')">
+                <div>👤</div>প্রোফাইল
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // টেলিগ্রাম মিনি অ্যাপ ইনিশিয়ালাইজেশন
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            let name = tg.initDataUnsafe.user.first_name;
+            if(name) {
+                document.getElementById('userName').innerText = name;
+            }
+        }
+
+        function switchTab(tabName) {
+            document.getElementById('homeSection').classList.remove('active-section');
+            document.getElementById('walletSection').classList.remove('active-section');
+            document.getElementById('withdrawSection').classList.remove('active-section');
+            document.getElementById('profileSection').classList.remove('active-section');
+
+            if(tabName === 'home') document.getElementById('homeSection').classList.add('active-section');
+            if(tabName === 'wallet') document.getElementById('walletSection').classList.add('active-section');
+            if(tabName === 'withdraw') document.getElementById('withdrawSection').classList.add('active-section');
+            if(tabName === 'profile') document.getElementById('profileSection').classList.add('active-section');
+        }
+
+        function copyReferLink() {
+            var copyText = document.getElementById("referLink");
+            navigator.clipboard.writeText(copyText.value);
+            alert("রেফার লিংক কপি করা হয়েছে: " + copyText.value);
+        }
+    </script>
+</body>
+</html>

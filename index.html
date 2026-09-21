@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>টেলিগ্রাম আর্নিং মিনি অ্যাপ</title>
+    <!-- Telegram Web App Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #333;
+            --card-bg: #fff;
+            --primary-color: #2481cc;
+            --accent-color: #28a745;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 70px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .btn-success {
+            background-color: var(--accent-color);
+        }
+        /* Bottom Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #ddd;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            color: #777;
+            font-size: 12px;
+        }
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .nav-item div {
+            font-size: 18px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <header>টেলিগ্রাম আর্নিং অ্যাপ</header>
+
+    <div class="container">
+        <!-- হোম পেজ -->
+        <div id="home" class="tab-content active">
+            <div class="card">
+                <h2>স্বাগতম!</h2>
+                <p>বিজ্ঞাপন দেখে এবং টাস্ক সম্পন্ন করে প্রতিদিন আয় করুন।</p>
+                <!-- Monetag Ad Integration Area -->
+                <div id="ad-container" style="margin: 15px 0; padding: 10px; background: #fff3cd; border-radius: 8px;">
+                    <p>বিজ্ঞাপন দেখতে নিচে ক্লিক করুন:</p>
+                    <button class="btn btn-success" onclick="watchAd()">বিজ্ঞাপন দেখুন (Watch Ad)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ব্যালেন্স পেজ -->
+        <div id="balance" class="tab-content">
+            <div class="card">
+                <h3>আপনার বর্তমান ব্যালেন্স</h3>
+                <h1 style="color: var(--accent-color);"><span id="user-balance">0.00</span> USD</h1>
+                <p>মোট রেফারেল: ০ জন</p>
+            </div>
+        </div>
+
+        <!-- উইথড্র পেজ -->
+        <div id="withdraw" class="tab-content">
+            <div class="card">
+                <h3>টাকা উত্তোলন করুন</h3>
+                <input type="text" id="wallet" placeholder="বিকাশ / নগদ / বিনান্স নম্বর">
+                <input type="number" id="amount" placeholder="পরিমাণ ($)">
+                <button class="btn" onclick="requestWithdraw()">উইথড্র রিকোয়েস্ট পাঠান</button>
+            </div>
+        </div>
+
+        <!-- প্রোফাইল পেজ -->
+        <div id="profile" class="tab-content">
+            <div class="card">
+                <h3>প্রোফাইল তথ্য</h3>
+                <p><strong>নাম:</strong> <span id="username">ইউজার</span></p>
+                <p><strong>আইডি:</strong> <span id="userid">------</span></p>
+                <p>স্ট্যাটাস: <span style="color: green;">অ্যাক্টিভ</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- বটম নেভিগেশন বার -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('home', this)">
+            <div>🏠</div>হোম
+        </div>
+        <div class="nav-item" onclick="switchTab('balance', this)">
+            <div>💰</div>ব্যালেন্স
+        </div>
+        <div class="nav-item" onclick="switchTab('withdraw', this)">
+            <div>💳</div>উইথড্র
+        </div>
+        <div class="nav-item" onclick="switchTab('profile', this)">
+            <div>👤</div>প্রোফাইল
+        </div>
+    </div>
+
+    <script>
+        // টেলিগ্রাম ওয়েব অ্যাপ ইনিশিয়ালাইজেশন
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // ব্যবহারকারীর টেলিগ্রাম নাম ও আইডি সেট করা
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name;
+            document.getElementById('userid').innerText = tg.initDataUnsafe.user.id;
+        }
+
+        // ট্যাব সুইচিং ফাংশন
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // অ্যাড দেখার ফাংশন (আপনার Monetag লিঙ্ক যুক্ত করা হয়েছে)
+        let currentBalance = 0.00;
+        function watchAd() {
+            // নতুন ট্যাবে আপনার Monetag অ্যাড লিংক ওপেন হবে
+            window.open('https://omg10.com/4/11855225', '_blank');[span_2](start_span)[span_2](end_span)
+            
+            // ব্যালেন্স আপডেট সিম্যুলেশন
+            setTimeout(() => {
+                currentBalance += 0.05; 
+                document.getElementById('user-balance').innerText = currentBalance.toFixed(2);
+                alert("ধন্যবাদ! বিজ্ঞাপন দেখার জন্য আপনার অ্যাকাউন্টে ০.০৫$ যোগ করা হয়েছে।");
+            }, 1000);
+        }
+
+        function requestWithdraw() {
+            let wallet = document.getElementById('wallet').value;
+            let amount = document.getElementById('amount').value;
+            if(!wallet || !amount) {
+                alert("দয়া করে সঠিক তথ্য দিন!");
+                return;
+            }
+            if(amount > currentBalance) {
+                alert("আপনার পর্যাপ্ত ব্যালেন্স নেই!");
+                return;
+            }
+            alert("আপনার উইথড্র রিকোয়েস্ট সফলভাবে জমা হয়েছে!");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD FREELANCING ACADEMY</title>
+    <style>
+        :root {
+            --primary-color: #ff7f00;
+            --primary-dark: #e06d00;
+            --bg-color: #fff9f5;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 70px;
+        }
+
+        /* Header Style */
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .header .menu-icon, .header .notif-icon {
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        /* Banner Style */
+        .banner {
+            width: 100%;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .banner img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .banner-caption {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            width: 100%;
+            padding: 15px 10px 10px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Category Section */
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+            color: #444;
+        }
+
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .menu-item {
+            background: #fff;
+            border: 1px solid #ffe5d0;
+            border-radius: var(--border-radius);
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(255,127,0,0.05);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .menu-item:active {
+            transform: scale(0.95);
+            background: #fff3ec;
+        }
+
+        .menu-item img, .menu-item .icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
+            object-fit: contain;
+        }
+
+        .menu-item span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            display: block;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: var(--primary-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            color: white;
+            text-align: center;
+            font-size: 11px;
+            cursor: pointer;
+            flex: 1;
+            text-decoration: none;
+        }
+
+        .nav-item div {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            font-weight: bold;
+        }
+
+        /* Hidden Utility */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="menu-icon" onclick="alert('সাইডবার মেনু খোলা হয়েছে')">☰</div>
+        <div>BD FREELANCING ACADEMY</div>
+        <div class="notif-icon" onclick="alert('কোনো নতুন নোটিশ নেই')">🔔</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content" id="main-content">
+        <!-- Banner with the specified girl image and caption -->
+        <div class="banner">
+            <img src="watermarked_img_1054064923418009796.png" alt="ব্যানার ছবি">
+            <div class="banner-caption">
+                বড় ব্যানার: এখানে ক্যাপশন থাকবে। এই অ্যাপটি ব্যবহার করে আয় করুন!
+            </div>
+        </div>
+
+        <div class="section-title">সেবা-র ১০ ক্যাটাগরি</div>
+
+        <!-- 10 Categories Grid -->
+        <div class="grid-menu">
+            <div class="menu-item" onclick="alert('Mobile Recharge এ ক্লিক করা হয়েছে')">
+                <div class="icon">⚡</div>
+                <span>Mobile Recharge</span>
+            </div>
+            <div class="menu-item" onclick="alert('Monthly Salary এ ক্লিক করা হয়েছে')">
+                <div class="icon">💼</div>
+                <span>Monthly Salary</span>
+            </div>
+            <div class="menu-item" onclick="alert('Facebook Sell এ ক্লিক করা হয়েছে')">
+                <div class="icon">📘</div>
+                <span>Facebook Sell</span>
+            </div>
+            <div class="menu-item" onclick="alert('Gmail Sell এ ক্লিক করা হয়েছে')">
+                <div class="icon">✉️</div>
+                <span>Gmail Sell</span>
+            </div>
+            <div class="menu-item" onclick="alert('Typing Job এ ক্লিক করা হয়েছে')">
+                <div class="icon">⌨️</div>
+                <span>Typing Job</span>
+            </div>
+            <div class="menu-item" onclick="alert('Job Post এ ক্লিক করা হয়েছে')">
+                <div class="icon">📄</div>
+                <span>Job Post</span>
+            </div>
+            <div class="menu-item" onclick="alert('Bank Income এ ক্লিক করা হয়েছে')">
+                <div class="icon">🏦</div>
+                <span>Bank Income</span>
+            </div>
+            <div class="menu-item" onclick="alert('VIP Job এ ক্লিক করা হয়েছে')">
+                <div class="icon">⭐</div>
+                <span>VIP Job</span>
+            </div>
+            <div class="menu-item" onclick="alert('Instagram Skill এ ক্লিক করা হয়েছে')">
+                <div class="icon">📷</div>
+                <span>Instagram Skill</span>
+            </div>
+            <div class="menu-item" onclick="alert('Daily Salary এ ক্লিক করা হয়েছে')">
+                <div class="icon">📅</div>
+                <span>Daily Salary</span>
+            </div>
+            <div class="menu-item" onclick="alert('Gift Code এ ক্লিক করা হয়েছে')">
+                <div class="icon">🎁</div>
+                <span>Gift Code</span>
+            </div>
+            <div class="menu-item" onclick="alert('150 TAKA INCOME এ ক্লিক করা হয়েছে')">
+                <div class="icon">💰</div>
+                <span>150 TAKA INCOME</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a class="nav-item active" onclick="switchTab('home')">
+            <div>🏠</div>হোম
+        </a>
+        <a class="nav-item" onclick="switchTab('wallet')">
+            <div>💳</div>ওয়ালেট
+        </a>
+        <a class="nav-item" onclick="switchTab('withdraw')">
+            <div>💸</div>উইথড্র
+        </a>
+        <a class="nav-item" onclick="switchTab('network')">
+            <div>👥</div>নেটওয়ার্ক
+        </a>
+        <a class="nav-item" onclick="switchTab('profile')">
+            <div>👤</div>প্রোফাইল
+        </a>
+    </div>
+</div>
+
+<script>
+    function switchTab(tabName) {
+        // ট্যাব পরিবর্তনের সাধারণ ফাংশন, পরবর্তীতে অন্যান্য পেজ রাউট করতে পারবেন
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        
+        if(tabName !== 'home') {
+            console.log(tabName + ' ট্যাবে যাওয়া হয়েছে');
+        }
+    }
+</script>
+
+</body>
+              </html>

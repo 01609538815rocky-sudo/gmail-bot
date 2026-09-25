@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রোফাইল - Student Earning</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff6a00, #ee0979);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background: #fff;
+            color: #ff6a00;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .profile-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .profile-id {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        .container {
+            padding: 15px;
+        }
+        .info-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #666;
+        }
+        .info-value {
+            font-weight: bold;
+            color: #333;
+        }
+        .back-btn {
+            display: block;
+            width: 100%;
+            background: #ff6a00;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 106, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- প্রোফাইল হেডার -->
+    <div class="header">
+        <div class="profile-avatar" id="avatar-text">DK</div>
+        <h2 class="profile-name" id="profile-name">DEVLOPER KHOKON</h2>
+        <div class="profile-id">ID: <span id="user-id">987654321</span></div>
+    </div>
+
+    <div class="container">
+        <!-- অ্যাকাউন্টের বিস্তারিত তথ্য -->
+        <div class="info-card">
+            <div class="info-row">
+                <span class="info-label">💰 মূল ব্যালেন্স</span>
+                <span class="info-value" style="color: #ff6a00;">৳ 0.00</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">👥 মোট রেফার</span>
+                <span class="info-value">০ জন</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">✅ সম্পন্ন টাস্ক</span>
+                <span class="info-value">০ টি</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">💳 অ্যাকাউন্ট স্ট্যাটাস</span>
+                <span class="info-value" style="color: green;">অ্যাক্টিভ</span>
+            </div>
+        </div>
+
+        <!-- হোম বা পেজে ফিরে যাওয়ার বাটন -->
+        <a href="index.html" class="back-btn">হোমপেজে ফিরে যান</a>
+    </div>
+
+    <script>
+        // টেলিগ্রাম থেকে ইউজারের রিয়েল ডাটা নেওয়ার স্ক্রিপ্ট
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            let user = tg.initDataUnsafe.user;
+            document.getElementById('profile-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            document.getElementById('user-id').innerText = user.id;
+            document.getElementById('avatar-text').innerText = user.first_name.charAt(0).toUpperCase();
+        }
+    </script>
+</body>
+</html>

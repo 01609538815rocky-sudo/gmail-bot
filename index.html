@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelance Hub - Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #070913;
+            --card-bg: #111827;
+            --card-border: #1f293d;
+            --accent-blue: #2563eb;
+            --text-main: #ffffff;
+            --text-secondary: #9ca3af;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 75px;
+        }
+
+        .container {
+            padding: 14px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .header-left h3 {
+            font-size: 17px;
+            font-weight: 700;
+        }
+        .header-left p {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .icon-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Banner Design */
+        .promo-banner {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .promo-banner h4 { font-size: 15px; margin-bottom: 3px; }
+        .promo-banner p { font-size: 11px; color: #e2e8f0; }
+
+        /* Referral Box */
+        .ref-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .ref-box label { font-size: 11px; color: var(--text-secondary); }
+        .ref-group {
+            display: flex;
+            margin-top: 6px;
+            background: #030712;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+        .ref-group input {
+            background: transparent;
+            border: none;
+            padding: 8px 10px;
+            color: white;
+            flex: 1;
+            font-size: 12px;
+            outline: none;
+        }
+        .ref-group button {
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            padding: 0 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Task Grid */
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .task-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .task-card i { font-size: 22px; color: #60a5fa; margin-bottom: 6px; }
+        .task-card h5 { font-size: 12px; margin-bottom: 2px; }
+        .task-card span { font-size: 10px; color: var(--success); }
+
+        /* Admin Panel Styles (Match with Image 2) */
+        .admin-header-box {
+            background: #eef2ff;
+            color: #1e1b4b;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sub-card {
+            background: #ffffff;
+            color: #1f2937;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .sub-field {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .badge-pending {
+            background: #fef3c7;
+            color: #d97706;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Password Modal */
+        #authModal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        .modal-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 14px;
+            width: 85%;
+            max-width: 320px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+        .modal-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 12px 0;
+            background: #030712;
+            border: 1px solid var(--card-border);
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Bottom Navbar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #0b0f19;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 99;
+        }
+        .nav-item {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 10px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .nav-item.active { color: #3b82f6; }
+        .nav-item i { font-size: 16px; display: block; margin-bottom: 2px; }
+
+        .view { display: none; }
+        .view.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h3 id="appTitle">BD Freelance Hub</h3>
+                <p>ঘরে বসে কাজ করুন অনলাইনে</p>
+            </div>
+            <div class="icon-btn" onclick="requestAdminAccess()"><i class="fa-solid fa-lock"></i></div>
+        </div>
+
+        <!-- HOME VIEW -->
+        <div id="homeView" class="view active">
+            <div class="promo-banner">
+                <div>
+                    <h4>ঘরে বসে ইনকাম করুন</h4>
+                    <p>সহজ কাজ, নিশ্চিত পেমেন্ট</p>
+                </div>
+                <i class="fa-solid fa-crown" style="font-size: 28px; color: #fde047;"></i>
+            </div>
+
+            <div class="ref-box">
+                <label>আপনার রেফারেল লিংক</label>
+                <div class="ref-group">
+                    <input type="text" id="refLink" value="https://t.me/BDFreelanceHubBot?ref=12345" readonly>
+                    <button onclick="copyRef()">কপি</button>
+                </div>
+            </div>
+
+            <div class="section-title">জনপ্রিয় কাজগুলো</div>
+            <div class="task-grid">
+                <div class="task-card" onclick="alert('Gmail কাজ সিলেক্ট করা হয়েছে!')">
+                    <i class="fa-solid fa-envelope"></i>
+                    <h5>Gmail</h5>
+                    <span>৳10 প্রতি কাজ</span>
+                </div>
+                <div class="task-card" onclick="alert('Facebook কাজ সিলেক্ট করা হয়েছে!')">
+                    <i class="fa-brands fa-facebook"></i>
+                    <h5>Facebook</h5>
+                    <span>৳3 প্রতি কাজ</span>
+                </div>
+                <div class="task-card" onclick="alert('Instagram কাজ সিলেক্ট করা হয়েছে!')">
+                    <i class="fa-brands fa-instagram"></i>
+                    <h5>Instagram</h5>
+                    <span>৳2.5 প্রতি কাজ</span>
+                </div>
+                <div class="task-card" onclick="alert('Typing Job সিলেক্ট করা হয়েছে!')">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <h5>Typing</h5>
+                    <span>৳5 প্রতি কাজ</span>
+                </div>
+                <div class="task-card" onclick="alert('Data Entry সিলেক্ট করা হয়েছে!')">
+                    <i class="fa-solid fa-database"></i>
+                    <h5>Data Entry</h5>
+                    <span>৳8 প্রতি কাজ</span>
+                </div>
+                <div class="task-card" onclick="alert('Gift Code সিলেক্ট করা হয়েছে!')">
+                    <i class="fa-solid fa-gift"></i>
+                    <h5>Gift Code</h5>
+                    <span>৳6 প্রতি কাজ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL VIEW (Protected by Password) -->
+        <div id="adminView" class="view">
+            <div class="admin-header-box">
+                <div>
+                    <h4 style="font-size: 15px;"><i class="fa-solid fa-shield-halved"></i> এডমিন কন্ট্রোল প্যানেল</h4>
+                    <p style="font-size: 11px;">ইউজার সাবমিশন ও রেট ম্যানেজমেন্ট</p>
+                </div>
+                <span style="background: #22c55e; color: white; padding: 3px 8px; border-radius: 10px; font-size: 10px;">লাইভ</span>
+            </div>
+
+            <!-- Category Tabs inside Admin -->
+            <div style="display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 4px;">
+                <button style="background:var(--accent-blue); color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; white-space:nowrap;">জিমেইল কাজ</button>
+                <button style="background:#1f293d; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; white-space:nowrap;">ফেসবুক কাজ</button>
+                <button style="background:#1f293d; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; white-space:nowrap;">ইনস্টাগ্রাম</button>
+            </div>
+
+            <!-- Submission Item -->
+            <div class="sub-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px;">
+                    <span><b>Unknown</b> (ID: 7572)</span>
+                    <span class="badge-pending">PENDING</span>
+                </div>
+                <div class="sub-field">
+                    <span>anikaxx800@gmail.com</span>
+                    <i class="fa-regular fa-copy" style="cursor: pointer; color: #2563eb;" onclick="alert('কপি হয়েছে')"></i>
+                </div>
+                <div class="sub-field">
+                    <span>••••••••••••</span>
+                    <i class="fa-regular fa-eye" style="cursor: pointer;"></i>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <div style="font-size: 12px;">
+                        রেট: <input type="number" value="20" style="width: 55px; padding: 4px; border: 1px solid #d1d5db; border-radius: 4px; text-align: center;"> ৳
+                    </div>
+                    <select style="padding: 5px; border-radius: 6px; border: 1px solid #d1d5db; font-size: 12px;">
+                        <option>Pending</option>
+                        <option>Approve</option>
+                        <option>Reject</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- WALLET VIEW -->
+        <div id="walletView" class="view">
+            <div class="section-title">ওয়ালেট</div>
+            <div style="background: var(--card-bg); padding: 18px; border-radius: 12px; text-align: center; border: 1px solid var(--card-border);">
+                <p style="font-size: 12px; color: var(--text-secondary);">মোট ব্যালেন্স</p>
+                <h2 style="font-size: 24px; margin: 8px 0; color: var(--success);">৳ 0.00</h2>
+                <button style="background: var(--accent-blue); color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: 600;">টাকা উত্তোলন করুন</button>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="profileView" class="view">
+            <div class="section-title">প্রোফাইল</div>
+            <div style="background: var(--card-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--card-border);">
+                <p style="font-weight: 600;">LxMAIDUL TADER</p>
+                <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">User ID: BD12345</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal Popup -->
+    <div id="authModal">
+        <div class="modal-box">
+            <h4>এডমিন পাসওয়ার্ড দিন</h4>
+            <input type="password" id="adminPasswordInput" placeholder="পাসওয়ার্ড লিখুন">
+            <div style="display: flex; gap: 8px;">
+                <button onclick="verifyPassword()" style="flex:1; background:var(--accent-blue); border:none; color:white; padding:8px; border-radius:6px; font-weight:600;">প্রবেশ করুন</button>
+                <button onclick="closeModal()" style="flex:1; background:#374151; border:none; color:white; padding:8px; border-radius:6px;">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-house"></i>হোম</button>
+        <button class="nav-item" onclick="switchTab('wallet', this)"><i class="fa-solid fa-wallet"></i>ওয়ালেট</button>
+        <button class="nav-item" onclick="switchTab('profile', this)"><i class="fa-solid fa-user"></i>প্রোফাইল</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function switchTab(tab, el) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(el) el.classList.add('active');
+            
+            if(tab === 'home') document.getElementById('homeView').classList.add('active');
+            if(tab === 'wallet') document.getElementById('walletView').classList.add('active');
+            if(tab === 'profile') document.getElementById('profileView').classList.add('active');
+            if(tab === 'admin') document.getElementById('adminView').classList.add('active');
+        }
+
+        function requestAdminAccess() {
+            document.getElementById('authModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function verifyPassword() {
+            let pass = document.getElementById('adminPasswordInput').value;
+            // আপনার সিক্রেট পাসওয়ার্ড এখানে চেক করা হচ্ছে (যেমন: 1234)
+            if(pass === "1234") {
+                closeModal();
+                switchTab('admin');
+                alert("এডমিন প্যানেলে সফলভাবে প্রবেশ করেছেন!");
+            } else {
+                alert("ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।");
+            }
+        }
+
+        function copyRef() {
+            let copyText = document.getElementById("refLink");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("রেফারেল লিংক কপি করা হয়েছে!");
+        }
+    </script>
+</body>
+</html>

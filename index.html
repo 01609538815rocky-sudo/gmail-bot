@@ -1,0 +1,128 @@
+ <!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelance Hub</title>
+    <!-- টেলিগ্রাম Web App স্ক্রিপ্ট -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d0f1a;
+            --card-bg: #161b2e;
+            --accent-color: #246bfd;
+            --text-color: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .wallet-card {
+            background: linear-gradient(135deg, #246bfd 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .task-card {
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .task-card h4 {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .task-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- হেডার অংশ -->
+    <div class="header">
+        <div>
+            <h3 id="username" style="margin:0;">BD Freelance Hub</h3>
+            <p style="margin:0; font-size:12px; color:#94a3b8;">ঘরে বসে কাজ করুন অনলাইনে</p>
+        </div>
+        <div>🔔</div>
+    </div>
+
+    <!-- ওয়ালেট বা ব্যালেন্স কার্ড -->
+    <div class="wallet-card">
+        <p style="margin:0; font-size:14px;">মোট ব্যালেন্স</p>
+        <h2 style="margin:5px 0;">৳ 0.00</h2>
+        <button class="btn" style="background: rgba(255,255,255,0.2);">টাকা উত্তোলন</button>
+    </div>
+
+    <!-- জনপ্রিয় কাজগুলো -->
+    <h4>জনপ্রিয় কাজগুলো</h4>
+    <div class="task-grid">
+        <div class="task-card">
+            <h4>Gmail</h4>
+            <p>৳10 প্রতি কাজ</p>
+            <button class="btn" onclick="startTask('Gmail')">কাজ করুন</button>
+        </div>
+        <div class="task-card">
+            <h4>Facebook</h4>
+            <p>৳3 প্রতি কাজ</p>
+            <button class="btn" onclick="startTask('Facebook')">কাজ করুন</button>
+        </div>
+        <div class="task-card">
+            <h4>Instagram</h4>
+            <p>৳2.50 প্রতি কাজ</p>
+            <button class="btn" onclick="startTask('Instagram')">কাজ করুন</button>
+        </div>
+        <div class="task-card">
+            <h4>Typing Job</h4>
+            <p>৳5 প্রতি কাজ</p>
+            <button class="btn" onclick="startTask('Typing')">কাজ করুন</button>
+        </div>
+    </div>
+
+    <script>
+        // টেলিগ্রাম ওয়েব অ্যাপ ইনিশিয়ালাইজেশন
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // ইউজারের টেলিগ্রাম নাম দেখানোর জন্য
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('username').innerText = tg.initDataUnsafe.user.first_name + ' Hub';
+        }
+
+        function taskName {
+            alert(taskName + ' কাজটি সিলেক্ট করা হয়েছে!');
+            // এখানে টেলিগ্রাম বটের মাধ্যমে ডেটা ব্যাকএন্ডে পাঠানোর কোড যুক্ত করতে পারেন
+        }
+    </script>
+</body>
+</html>

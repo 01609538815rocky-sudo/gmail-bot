@@ -1,0 +1,336 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const BDFreelanceApp());
+}
+
+class BDFreelanceApp extends StatelessWidget {
+  const BDFreelanceApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'BD Freelance Hub',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF0D0B21),
+        primaryColor: const Color(0xFF6C63FF),
+      ),
+      home: const MainLayout(),
+    );
+  }
+}
+
+class MainLayout extends StatefulWidget {
+  const MainLayout({Key? key}) : super(key: key);
+
+  @override
+  State<MainLayout> createState() => _MainLayoutState();
+}
+
+class _MainLayoutState extends State<MainLayout> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomeScreen(),
+    const WalletScreen(),
+    const WithdrawScreen(),
+    const ProfileScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        backgroundColor: const Color(0xFF131033),
+        selectedItemColor: Colors.purpleAccent,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'হোম'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'ওয়ালেট'),
+          BottomNavigationBarItem(icon: Icon(Icons.payment), label: 'উইড্র'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'প্রোফাইল'),
+        ],
+      ),
+    );
+  }
+}
+
+// ১. হোম স্ক্রিন
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
+          children: const [
+            Icon(Icons.flash_on, color: Colors.blueAccent),
+            SizedBox(width: 8),
+            Text('BD Freelance Hub', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        actions: [
+          IconButton(icon: const Icon(Icons.notifications_none), onPressed: () {}),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF2E3192), Color(0xFF1BFFFF)],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: const [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('কাজ করুন\nঘরে বসে\nইনকাম করুন', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.work_outline, size: 60, color: Colors.white70),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1B1840),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text('আপনার রেফারেল লিংক: bdfreelance.com/ref/6207', style: TextStyle(fontSize: 12, color: Colors.white70)),
+                  Icon(Icons.copy, size: 18, color: Colors.purpleAccent),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text('কাজের ক্যাটাগরি', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              children: const [
+                CategoryCard(icon: Icons.mail, title: 'Gmail Job'),
+                CategoryCard(icon: Icons.facebook, title: 'Facebook'),
+                CategoryCard(icon: Icons.camera_alt, title: 'Instagram'),
+                CategoryCard(icon: Icons.computer, title: 'Typing Job'),
+                CategoryCard(icon: Icons.edit_note, title: 'Data Entry'),
+                CategoryCard(icon: Icons.card_giftcard, title: 'Gift Code'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+
+  const CategoryCard({Key? key, required this.icon, required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1B1840),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 30, color: Colors.purpleAccent),
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    );
+  }
+}
+
+// ২. ওয়ালেট স্ক্রিন
+class WalletScreen extends StatelessWidget {
+  const WalletScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.transparent, title: const Text('ওয়ালেট')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1B1840),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('মেইন ব্যালেন্স', style: TextStyle(color: Colors.grey)),
+                      SizedBox(height: 8),
+                      Text('৳ 0.00', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.greenAccent)),
+                    ],
+                  ),
+                  Icon(Icons.account_balance_wallet, size: 40, color: Colors.blueAccent),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ৩. উইড্র (Withdraw) স্ক্রিন
+class WithdrawScreen extends StatefulWidget {
+  const WithdrawScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WithdrawScreen> createState() => _WithdrawScreenState();
+}
+
+class _WithdrawScreenState extends State<WithdrawScreen> {
+  String selectedMethod = 'বিকাশ';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.transparent, title: const Text('উইড্র')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('উইড্র অপশন নির্বাচন করুন', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => selectedMethod = 'বিকাশ'),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: selectedMethod == 'বিকাশ' ? Colors.pink.shade700 : const Color(0xFF1B1840),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(child: Text('বিকাশ', style: TextStyle(fontWeight: FontWeight.bold))),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => selectedMethod = 'নগদ'),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: selectedMethod == 'নগد' ? Colors.orange.shade800 : const Color(0xFF1B1840),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(child: Text('নগদ', style: TextStyle(fontWeight: FontWeight.bold))),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Text('পেমেন্ট মাধ্যম', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 8),
+            TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color(0xFF1B1840),
+                hintText: 'একাউন্ট নাম্বার লিখুন',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text('পরিমাণ (৳)', style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 8),
+            TextField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                filled: typeInputDecoration('ন্যূনতম ১০০ টাকা'),
+                fillColor: const Color(0xFF1B1840),
+                hintText: 'টাকার পরিমাণ লিখুন',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              ),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purpleAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: () {
+                  // সিকিউর ট্রানজেকশন লজিক এখানে যুক্ত করা যাবে
+                },
+                child: const Text('উইড্র রিকোয়েস্ট পাঠান', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  typeInputDecoration(String hint) {
+    return true;
+  }
+}
+
+// ৪. প্রোফাইল স্ক্রিন
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.transparent, title: const Text('প্রোফাইল')),
+      body: const Center(
+        child: Text('ইউজার প্রোফাইল ও সেটিংস', style: TextStyle(fontSize: 18, color: Colors.white70)),
+      ),
+    );
+  }
+}

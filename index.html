@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD Freelance Hub - Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #070913;
+            --card-bg: #111827;
+            --card-border: #1f293d;
+            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
+            --text-main: #ffffff;
+            --text-secondary: #9ca3af;
+            --success: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 75px;
+        }
+
+        .container {
+            padding: 14px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .header-left h3 { font-size: 17px; font-weight: 700; }
+        .header-left p { font-size: 11px; color: var(--text-secondary); }
+        .header-icons { display: flex; gap: 8px; }
+        .icon-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .banner h4 { font-size: 15px; margin-bottom: 3px; }
+        .banner p { font-size: 11px; color: var(--text-secondary); }
+
+        /* Referral Box */
+        .ref-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .ref-box label { font-size: 11px; color: var(--text-secondary); }
+        .ref-group {
+            display: flex;
+            margin-top: 6px;
+            background: #030712;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+        .ref-group input {
+            background: transparent;
+            border: none;
+            padding: 8px 10px;
+            color: white;
+            flex: 1;
+            font-size: 12px;
+            outline: none;
+        }
+        .ref-group button {
+            background: var(--accent-gradient);
+            border: none;
+            color: white;
+            padding: 0 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Task Categories Grid */
+        .section-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .task-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .task-card i { font-size: 22px; color: #60a5fa; margin-bottom: 6px; }
+        .task-card h5 { font-size: 12px; margin-bottom: 2px; }
+        .task-card span { font-size: 10px; color: var(--success); }
+
+        /* Form Submissions (Task Details View) */
+        .form-group-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .input-field-box {
+            background: #070913;
+            border: 1px solid var(--card-border);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .input-field-box label { font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px; }
+        .input-field-box input { width: 100%; background: transparent; border: none; color: white; font-size: 13px; outline: none; }
+
+        .btn-main {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Admin Dashboard Grid */
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .admin-stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        .admin-stat-card span { font-size: 11px; color: var(--text-secondary); }
+        .admin-stat-card h3 { font-size: 18px; margin-top: 4px; color: #60a5fa; }
+
+        /* Bottom Navbar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #0b0f19;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 99;
+        }
+        .nav-item {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 10px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .nav-item.active { color: #3b82f6; }
+        .nav-item i { font-size: 16px; display: block; margin-bottom: 2px; }
+
+        .view { display: none; }
+        .view.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h3 id="appTitle">BD Freelance Hub</h3>
+                <p>Work • Earn • Grow</p>
+            </div>
+            <div class="header-icons">
+                <div class="icon-btn" onclick="switchView('adminView', this)"><i class="fa-solid fa-crown"></i></div>
+                <div class="icon-btn"><i class="fa-regular fa-bell"></i></div>
+            </div>
+        </div>
+
+        <!-- 1. HOME VIEW -->
+        <div id="homeView" class="view active">
+            <div class="banner">
+                <div>
+                    <h4>ঘরে বসে কাজ করুন অনলাইনে</h4>
+                    <p>সহজ কাজ, নিশ্চিত পেমেন্ট</p>
+                </div>
+                <i class="fa-solid fa-laptop-code" style="font-size: 28px; color: #60a5fa;"></i>
+            </div>
+
+            <div class="ref-box">
+                <label>আপনার রেফারেল লিংক</label>
+                <div class="ref-group">
+                    <input type="text" id="refLink" value="https://bdfreelancehub.com/?ref=12345" readonly>
+                    <button onclick="copyRef()">কপি করুন</button>
+                </div>
+            </div>
+
+            <div class="section-title">জনপ্রিয় কাজগুলো</div>
+            <div class="task-grid">
+                <div class="task-card" onclick="switchView('gmailTaskView')">
+                    <i class="fa-solid fa-envelope"></i>
+                    <h5>Gmail কাজ</h5>
+                    <span>৳10</span>
+                </div>
+                <div class="task-card" onclick="switchView('fbTaskView')">
+                    <i class="fa-brands fa-facebook"></i>
+                    <h5>Facebook কাজ</h5>
+                    <span>৳3</span>
+                </div>
+                <div class="task-card" onclick="switchView('instaTaskView')">
+                    <i class="fa-brands fa-instagram"></i>
+                    <h5>Instagram</h5>
+                    <span>৳2.5</span>
+                </div>
+                <div class="task-card" onclick="switchView('typingTaskView')">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <h5>Typing Job</h5>
+                    <span>৳5</span>
+                </div>
+                <div class="task-card" onclick="switchView('homeView')">
+                    <i class="fa-solid fa-database"></i>
+                    <h5>Data Entry</h5>
+                    <span>৳8</span>
+                </div>
+                <div class="task-card" onclick="switchView('homeView')">
+                    <i class="fa-solid fa-gift"></i>
+                    <h5>Gift Code</h5>
+                    <span>৳6</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. GMAIL TASK SUBMISSION VIEW -->
+        <div id="gmailTaskView" class="view">
+            <div class="section-title" style="display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-arrow-left" style="cursor:pointer;" onclick="switchView('homeView')"></i> Gmail কাজ জমা দিন
+            </div>
+            <div class="form-group-card">
+                <div class="input-field-box">
+                    <label>Gmail আইডি</label>
+                    <input type="email" placeholder="yourname@gmail.com">
+                </div>
+                <div class="input-field-box">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" placeholder="জিমেইল পাসওয়ার্ড দিন">
+                </div>
+                <div style="margin-bottom: 12px; font-size: 12px; color: var(--success);">
+                    প্রতি কাজের স্ট্যাটাস: <b>৳ 10</b>
+                </div>
+                <button class="btn-main" onclick="alert('জিমেইল কাজ সফলভাবে সাবমিট হয়েছে!')">জব সাবমিট করুন</button>
+            </div>
+        </div>
+
+        <!-- 3. ADMIN PANEL VIEW -->
+        <div id="adminView" class="view">
+            <div class="section-title"><i class="fa-solid fa-shield-halved"></i> এডমিন প্যানেল</div>
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <span>মোট ব্যবহারকারী</span>
+                    <h3>1,248+</h3>
+                </div>
+                <div class="admin-stat-card">
+                    <span>আজকের কাজ</span>
+                    <h3>856+</h3>
+                </div>
+                <div class="admin-stat-card">
+                    <span>মোট আয়</span>
+                    <h3>৳ 25,780</h3>
+                </div>
+                <div class="admin-stat-card">
+                    <span>পেন্ডিং রিকোয়েস্ট</span>
+                    <h3 style="color: #f59e0b;">12</h3>
+                </div>
+            </div>
+            
+            <div class="form-group-card">
+                <p style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">এডমিন কুইক কন্ট্রোল</p>
+                <button class="btn-main" style="margin-bottom: 8px;" onclick="alert('কাজের রিকোয়েস্ট লিস্ট চেক করা হচ্ছে...')">কাজের রিকোয়েস্ট ম্যানেজ করুন</button>
+                <button class="btn-main" style="background: #1f293d;" onclick="alert('রেট সেটিংস প্যানেল খোলা হয়েছে')">কাজের রেট পরিবর্তন করুন</button>
+            </div>
+        </div>
+
+        <!-- 4. WALLET VIEW -->
+        <div id="walletView" class="view">
+            <div class="section-title">ওয়ালেট ও ব্যালেন্স</div>
+            <div class="form-group-card" style="text-align: center;">
+                <p style="font-size: 12px; color: var(--text-secondary);">মোট ব্যালেন্স</p>
+                <h2 style="font-size: 26px; margin: 10px 0; color: var(--success);">৳ 0.00</h2>
+                <button class="btn-main">টাকা উত্তোলন করুন</button>
+            </div>
+        </div>
+
+        <!-- 5. PROFILE VIEW -->
+        <div id="profileView" class="view">
+            <div class="section-title">প্রোফাইল</div>
+            <div class="form-group-card">
+                <h4 style="font-size: 16px;">LxMAIDUL TADER</h4>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">User ID: BD12345 <span style="color:var(--success)">● Verified</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchView('homeView', this)"><i class="fa-solid fa-house"></i>হোম</button>
+        <button class="nav-item" onclick="switchView('homeView', this)"><i class="fa-solid fa-list-check"></i>কাজ</button>
+        <button class="nav-item" onclick="switchView('walletView', this)"><i class="fa-solid fa-wallet"></i>ব্যালেন্স</button>
+        <button class="nav-item" onclick="switchView('adminView', this)"><i class="fa-solid fa-shield-halved"></i>এডমিন</button>
+        <button class="nav-item" onclick="switchView('profileView', this)"><i class="fa-solid fa-user"></i>প্রোফাইল</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function switchView(viewId, element) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            if(element && element.classList.contains('nav-item')) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        function copyRef() {
+            let copyText = document.getElementById("refLink");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("রেফারেল লিংক সফলভাবে কপি করা হয়েছে!");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Task Mini App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        accentYellow: '#fbbf24',
+                        accentGreen: '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0b0f19] text-gray-100 font-sans antialiased pb-20">
+
+    <!-- Top Header Notice -->
+    <div class="bg-[#111827] px-4 py-2 text-xs flex justify-between items-center border-b border-gray-800">
+        <div class="flex items-center space-x-2">
+            <span class="text-red-500 font-bold">Gmail Task Mini App</span>
+            <span class="text-gray-400">| প্রতিটি সঠিক কাজ অ্যাপ্রুভ হতে ৩-৪ দিন লাগতে পারে।</span>
+        </div>
+        <div class="flex items-center space-x-1 bg-gray-800 px-2 py-0.5 rounded text-[10px]">
+            <span>🌐 BN</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto p-4 space-y-4">
+
+        <!-- User Profile & Balance Card -->
+        <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-4 rounded-2xl shadow-lg border border-indigo-500/30">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="https://i.ibb.co/3W4vW1S/avatar.png" alt="Profile" class="w-12 h-12 rounded-full border-2 border-yellow-400 object-cover" onerror="this.src='https://via.placeholder.com/48'">
+                    <div>
+                        <p class="text-xs text-indigo-200">স্বাগতম, <span class="font-bold text-white">ROCKY [Admin]</span></p>
+                        <p class="text-[10px] text-gray-400">ID: 8049855208</p>
+                    </div>
+                </div>
+                <button onclick="switchTab('withdraw')" class="bg-yellow-400 text-gray-900 px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1 shadow">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>উইথড্র</span>
+                </button>
+            </div>
+            <div class="mt-4 pt-3 border-t border-indigo-700/50 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-gray-300">বর্তমান ব্যালেন্স</p>
+                    <p class="text-2xl font-black text-yellow-400">৳ 0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content Sections -->
+        
+        <!-- HOME / TASK SUBMISSION TAB -->
+        <div id="tab-home" class="space-y-4">
+            <!-- Category Navigation Buttons -->
+            <div class="grid grid-cols-2 gap-2">
+                <button class="bg-yellow-400 text-gray-900 font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 text-sm shadow">
+                    <i class="fa-solid fa-envelope text-red-600"></i>
+                    <span>নিউ জিমেইল</span>
+                </button>
+                <button class="bg-[#1e293b] hover:bg-gray-800 text-gray-300 font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 text-sm border border-gray-700">
+                    <i class="fa-solid fa-envelope-open text-blue-400"></i>
+                    <span>ওন্ড জিমেইল</span>
+                </button>
+                <button class="bg-[#1e293b] hover:bg-gray-800 text-gray-300 font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 text-sm border border-gray-700">
+                    <i class="fa-brands fa-facebook text-blue-500 text-lg"></i>
+                    <span>ফেসবুক</span>
+                </button>
+                <button class="bg-[#1e293b] hover:bg-gray-800 text-gray-300 font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 text-sm border border-gray-700">
+                    <i class="fa-brands fa-instagram text-pink-500 text-lg"></i>
+                    <span>ইনস্টাগ্রাম</span>
+                </button>
+            </div>
+
+            <!-- New Gmail Submit Section -->
+            <div class="bg-[#161e2e] border border-gray-800 rounded-2xl p-4 space-y-4 shadow-xl">
+                <div class="flex items-center space-x-2 text-yellow-400 font-bold text-sm">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>নিউ জিমেইল জমা দিন</span>
+                </div>
+
+                <!-- Warning Box -->
+                <div class="bg-red-950/40 border border-red-800/60 p-3 rounded-xl text-xs text-red-200 flex items-start space-x-2">
+                    <i class="fa-solid fa-circle-exclamation text-red-400 mt-0.5"></i>
+                    <p><strong>বিশেষ নির্দেশনাবলী:</strong> জিমেইল অবশ্যই ৩ দিন পুরোনো হতে হবে এবং ফোন থেকে লগ আউট করতে হবে নাহলে রিজেক্ট করা হবে।</p>
+                </div>
+
+                <!-- Form Inputs -->
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">জিমেইল এড্রেস</label>
+                        <input type="email" placeholder="example@gmail.com" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-yellow-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">পাসওয়ার্ড</label>
+                        <input type="password" placeholder="পাসওয়ার্ড লিখুন" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-yellow-400">
+                    </div>
+                </div>
+
+                <button class="w-full bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white font-bold py-3 rounded-xl shadow-lg transition duration-200 text-sm">
+                    জমা দিন (প্রতিটি ৳17)
+                </button>
+            </div>
+        </div>
+
+        <!-- TASKS LIST TAB -->
+        <div id="tab-tasks" class="space-y-3 hidden">
+            <div class="bg-[#161e2e] border border-gray-800 rounded-xl p-3 text-xs text-gray-300 flex items-center space-x-2">
+                <i class="fa-solid fa-lightbulb text-yellow-400"></i>
+                <p>অ্যাডমিন যে টাস্কগুলো যোগ করবে সেগুলোর লিস্ট নিচে দেখাবে। নিয়ম মেনে কাজ সম্পন্ন করুন।</p>
+            </div>
+
+            <!-- Sample Task Card -->
+            <div class="bg-[#161e2e] border border-gray-800 rounded-2xl p-4 space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 text-[10px] px-2 py-0.5 rounded-full font-semibold">Gamgala</span>
+                    <span class="text-emerald-400 font-bold text-sm">+৳5.00</span>
+                </div>
+                <h3 class="font-bold text-sm">Gamgala face verification</h3>
+                <div class="text-xs text-gray-400 space-y-1">
+                    <p>নিয়ম: ১. প্রথমে আমার দেওয়া লিংক থেকে সাইটটি ওপেন করবেন এবং অ্যাকাউন্ট ক্রিয়েট করবেন...</p>
+                </div>
+                <button class="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold py-2 rounded-xl text-xs">
+                    <i class="fa-solid fa-camera mr-1"></i> প্রুফ জমা দিন
+                </button>
+            </div>
+        </div>
+
+        <!-- REFERRAL TAB -->
+        <div id="tab-refer" class="space-y-4 hidden">
+            <div class="bg-[#161e2e] border border-gray-800 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center space-x-2 text-yellow-400 font-bold text-sm">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>রেফার করে আয় করুন</span>
+                </div>
+                <p class="text-xs text-gray-400">আপনার রেফার লিংকে কেউ যোগ দিয়ে ইনকাম করলে, আপনি তার অর্জিত ইনকামের ৫% কমিশন সরাসরি আপনার ব্যালেন্স পাবেন।</p>
+                
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">আপনার ইউনিক রেফার লিংক</label>
+                    <div class="flex space-x-2">
+                        <input type="text" readonly value="https://t.me/gmailtaskminiapp" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-3 py-2 text-xs text-gray-300">
+                        <button class="bg-yellow-400 text-gray-900 px-4 rounded-xl text-xs font-bold"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WITHDRAW TAB -->
+        <div id="tab-withdraw" class="space-y-4 hidden">
+            <div class="bg-[#161e2e] border border-gray-800 rounded-2xl p-4 space-y-4">
+                <h3 class="font-bold text-sm text-yellow-400"><i class="fa-solid fa-wallet mr-1"></i> উইথড্র রিকোয়েস্ট</h3>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">পেমেন্ট মেথড সিলেক্ট করুন</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="border-2 border-pink-500 bg-pink-500/10 p-3 rounded-xl text-center font-bold text-xs cursor-pointer text-pink-400">
+                            bKash
+                        </div>
+                        <div class="border border-gray-700 bg-[#0b0f19] p-3 rounded-xl text-center font-bold text-xs cursor-pointer text-gray-400">
+                            নগদ
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">পার্সোনাল নম্বর (১১ ডিজিট)</label>
+                    <input type="text" placeholder="017xxxxxxxx" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">পরিমাণ (টাকা)</label>
+                    <input type="number" placeholder="সর্বনিম্ন ৮০ টাকা" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200">
+                </div>
+                <button class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl text-xs">
+                    উইথড্র রিকোয়েস্ট পাঠান
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#111827] border-t border-gray-800 flex justify-around py-3 text-xs text-gray-400 max-w-md mx-auto">
+        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-yellow-400">
+            <i class="fa-solid fa-house text-base"></i>
+            <span>হোম</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center hover:text-white">
+            <i class="fa-solid fa-list-check text-base"></i>
+            <span>টাস্ক</span>
+        </button>
+        <button onclick="switchTab('refer')" id="nav-refer" class="flex flex-col items-center hover:text-white">
+            <i class="fa-solid fa-user-group text-base"></i>
+            <span>রেফার</span>
+        </button>
+        <button onclick="switchTab('withdraw')" id="nav-withdraw" class="flex flex-col items-center hover:text-white">
+            <i class="fa-solid fa-wallet text-base"></i>
+            <span>উইথড্র</span>
+        </button>
+    </div>
+
+    <!-- JavaScript for Tab Switching -->
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.getElementById('tab-home').classList.add('hidden');
+            document.getElementById('tab-tasks').classList.add('hidden');
+            document.getElementById('tab-refer').classList.add('hidden');
+            document.getElementById('tab-withdraw').classList.add('hidden');
+
+            // Reset nav colors
+            document.querySelectorAll('.fixed button').forEach(btn => btn.classList.remove('text-yellow-400'));
+            document.querySelectorAll('.fixed button').forEach(btn => btn.classList.add('text-gray-400'));
+
+            // Show selected tab and activate nav
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('nav-' + tabName).classList.add('text-yellow-400');
+            document.getElementById('nav-' + tabName).classList.remove('text-gray-400');
+        }
+    </script>
+</body>
+  </html>
